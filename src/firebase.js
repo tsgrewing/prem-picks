@@ -32,6 +32,8 @@ const app = ​​initializeApp(firebaseConfig);
 ​​const auth = getAuth(app);
 ​const db = getFirestore(app);
 
+// Attempt login with google authentication provider
+
 const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
   try {
@@ -51,4 +53,32 @@ const signInWithGoogle = async () => {
     console.error(err);
     alert(err.message);
   }
+};
+
+// Login with email and password
+
+const logInWithEmailAndPassword = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+};
+
+// Register user with email and password
+const registerWithEmailAndPassword = async (name, email, password) => {
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const user = res.user;
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        name,
+        authProvider: "local",
+        email,
+      });
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
 };
