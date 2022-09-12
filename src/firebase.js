@@ -1,20 +1,20 @@
 import { initializeApp } from "firebase/app";
 import {
-GoogleAuthProvider,
-getAuth,
-signInWithPopup,
-signInWithEmailAndPassword,
-createUserWithEmailAndPassword,
-sendPasswordResetEmail,
-signOut,
+  GoogleAuthProvider,
+  getAuth,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
 } from "firebase/auth";
 import {
-getFirestore,
-query,
-getDocs,
-collection,
-where,
-addDoc,
+  getFirestore,
+  query,
+  getDocs,
+  collection,
+  where,
+  addDoc,
 } from "firebase/firestore";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -28,9 +28,9 @@ const firebaseConfig = {
     measurementId: "G-B879WNSY2E"
   };
 
-const app = ​​initializeApp(firebaseConfig);
-​​const auth = getAuth(app);
-​const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 // Attempt login with google authentication provider
 
