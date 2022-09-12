@@ -82,3 +82,30 @@ const registerWithEmailAndPassword = async (name, email, password) => {
       alert(err.message);
     }
 };
+
+// Password reset functionality
+const sendPasswordReset = async (email) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("Password reset link sent!");
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+};
+
+// Logout
+const logout = () => {
+    signOut(auth);
+};
+
+// Exports
+export {
+    auth,
+    db,
+    signInWithGoogle,
+    logInWithEmailAndPassword,
+    registerWithEmailAndPassword,
+    sendPasswordReset,
+    logout,
+  };
