@@ -1,0 +1,210 @@
+import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
+import "./Matches.css";
+import { auth, db, logout } from "../../firebase";
+import { query, collection, getDocs, where } from "firebase/firestore";
+import axios from "axios";
+
+// const api = 'https://api.football-data.org/v4/competitions/PL/matches?matchday=11'; 
+// axios.get(api , { 
+//     headers: {
+//         "X-Auth-Token" : `c135ba6432b14929b9ad305e4d8e1fed`,
+//         "Access-Control-Allow-Origin": '*'
+//     } 
+// })
+// .then(res => {
+//     console.log(res.data)
+// })
+// .catch((err) => {
+//     console.log(err)
+// });
+
+
+function Matches() {
+  const [user, loading, error] = useAuthState(auth);
+  const [name, setName] = useState("");
+  const [id, setId] = useState("");
+  const navigate = useNavigate();
+  const [matchList, setMatchList] = useState([]);
+  
+
+
+  const fetchUserName = async () => {
+    try {
+      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+      const doc = await getDocs(q);
+      const data = doc.docs[0].data();
+
+      setId(data.uid);
+
+      setName(data.name);
+      
+    } catch (err) {
+      console.error(err);
+      alert("An error occured while fetching user data");
+    }
+  };
+
+  // function setWeek(event) {
+  //   this.setState({week: event.target.value})
+  // };
+
+  function setMatches(matchArr){
+    setMatchList(matchArr);
+    // PopulateMatches(matchList);
+    console.log(matchList)
+  };
+
+  // const PopulateMatches = (matchList) => {
+  //   console.log(matchList.length)
+  //   if (matchList.length > 1){
+  //       matchList.map(match => {
+          
+  //         return (
+  //         <div className='flex content-center flex-wrap h-48'>
+  //           <div className='w-1/3 p-2' id={match.fixture.id + "-home"} >
+  //             <img alt="club crest" src={match.teams.home.logo} />
+  //             <p>{match.teams.home.name}</p>
+  //           </div>
+
+  //           if (match.fixture.status.short === "NS") {
+  //             <div className='w-1/3 p-2' >
+  //               <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} type="text" />
+  //               <p> - </p>
+  //               <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"} type="text" />
+  //             </div>
+  //           }
+  //           else{
+  //             <div className='w-1/3 p-2 content-center'>
+  //               <p>{match.goals.home} - {match.goals.away}</p>
+  //             </div>
+  //           }
+
+  //           <div className='w-1/3 p-2' id={match.fixture.id + "-away"}>
+  //             <p>{match.teams.away.name}</p>
+  //             <img alt="club crest" src={match.teams.away.logo} />
+  //           </div>
+  //         </div>
+  //           )
+  //         }
+
+  //       )
+  //   }
+  // };
+
+  function getMatches(week) {
+
+    const config = {
+      method: 'get',
+      url: "https://v3.football.api-sports.io/fixtures",
+      params: {league: 39, season: 2022, round: `Regular Season - ${week}`}, 
+      headers: {
+        'x-rapidapi-key': '89ca8fcfc72177c020455dd5f9ec0220',
+        'x-rapidapi-host': 'v3.football.api-sports.io'
+      }
+    };
+
+    axios(config)
+      .then(function (response) {
+        setMatches(response.data.response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
+
+    useEffect(() => {
+      if (loading) return;
+      if (!user) return navigate("/");
+
+      fetchUserName();
+    }, [user, loading]);
+
+    return (
+      <>
+      <div className="ml-auto mr-auto relative w-64">
+        <select className="block w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" onChange={event => getMatches(event.target.value)}>
+          <option value="1">Week 1</option>
+          <option value="2">Week 2</option>
+          <option value="3">Week 3</option>
+          <option value="4">Week 4</option>
+          <option value="5">Week 5</option>
+          <option value="6">Week 6</option>
+          <option value="7">Week 7</option>
+          <option value="8">Week 8</option>
+          <option value="9">Week 9</option>
+          <option value="10">Week 10</option>
+          <option value="11">Week 11</option>
+          <option value="12">Week 12</option>
+          <option value="13">Week 13</option>
+          <option value="14">Week 14</option>
+          <option value="15">Week 15</option>
+          <option value="16">Week 16</option>
+          <option value="17">Week 17</option>
+          <option value="18">Week 18</option>
+          <option value="19">Week 19</option>
+          <option value="20">Week 20</option>
+          <option value="21">Week 21</option>
+          <option value="22">Week 22</option>
+          <option value="23">Week 23</option>
+          <option value="24">Week 24</option>
+          <option value="25">Week 25</option>
+          <option value="26">Week 26</option>
+          <option value="27">Week 27</option>
+          <option value="28">Week 28</option>
+          <option value="29">Week 29</option>
+          <option value="30">Week 30</option>
+          <option value="31">Week 31</option>
+          <option value="32">Week 32</option>
+          <option value="33">Week 33</option>
+          <option value="34">Week 34</option>
+          <option value="35">Week 35</option>
+          <option value="36">Week 36</option>
+          <option value="37">Week 37</option>
+          <option value="38">Week 38</option>
+        </select>
+      </div>
+      <div className="block justify-center">
+      {matchList.map(match =>
+        <div key={match.fixture.id + "Row"} className='flex justify-content-center flex-wrap h-20'>
+
+          <div className='w-1/3 p-2 flex justify-content-right flex-wrap' id={match.fixture.id + "-home"} >
+            <img className="object-scale-down inline" alt="club crest" src={match.teams.home.logo} />
+            <p className="sm:text-2xl">  {match.teams.home.name}</p>
+          </div>
+
+         {(match.fixture.status.short === "NS") ?
+          <div className='w-1/3 p-2 justify-content-center' >
+            <input className="inline appearance-none block w-.05 bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} type="text" />
+            <p className="inline"> - </p>
+            <input className="inline appearance-none block w-.25 bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"} type="text" />
+          </div>
+        
+        : match.fixture.status.short ==="PST" ?
+
+
+          <div className='w-1/3 md:p-2 justify-content-center content-center'>
+            <p className="sm:text-2xl content-center">Postponed</p>
+          </div>
+
+        :
+          <div className='w-1/3 p-2 justify-content-center content-center'>
+            <p className="sm:text-2xl">{match.goals.home} - {match.goals.away}</p>
+          </div>
+        }
+
+        <div className='w-1/3 p-2 flex flex-wrap justify-content-left' id={match.fixture.id + "-away"}>
+          <p className="inline sm:text-2xl">{match.teams.away.name}  </p>
+          <img className="object-scale-down inline" alt="club crest" src={match.teams.away.logo} />
+        </div>
+      </div>
+        )
+      }
+      </div>
+
+      </>
+    );
+}
+
+export default Matches;
