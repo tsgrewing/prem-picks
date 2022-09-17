@@ -51,7 +51,10 @@ function Standings() {
         <button onClick={getUserPicks}>Get Predictions</button>
         {(predictions.length > 0) &&
           <div>
-            <p> {predictions.home} - {predictions.away}</p>
+            {predictions.map(doc => 
+            <p key={doc.id}> {doc.home} - {doc.away}</p>
+            ) 
+          }
           </div>
         }
     </div>
