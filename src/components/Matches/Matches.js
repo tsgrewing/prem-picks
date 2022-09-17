@@ -52,46 +52,7 @@ function Matches() {
 
   function setMatches(matchArr){
     setMatchList(matchArr);
-    // PopulateMatches(matchList);
-    console.log(matchList)
   };
-
-  // const PopulateMatches = (matchList) => {
-  //   console.log(matchList.length)
-  //   if (matchList.length > 1){
-  //       matchList.map(match => {
-          
-  //         return (
-  //         <div className='flex content-center flex-wrap h-48'>
-  //           <div className='w-1/3 p-2' id={match.fixture.id + "-home"} >
-  //             <img alt="club crest" src={match.teams.home.logo} />
-  //             <p>{match.teams.home.name}</p>
-  //           </div>
-
-  //           if (match.fixture.status.short === "NS") {
-  //             <div className='w-1/3 p-2' >
-  //               <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} type="text" />
-  //               <p> - </p>
-  //               <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"} type="text" />
-  //             </div>
-  //           }
-  //           else{
-  //             <div className='w-1/3 p-2 content-center'>
-  //               <p>{match.goals.home} - {match.goals.away}</p>
-  //             </div>
-  //           }
-
-  //           <div className='w-1/3 p-2' id={match.fixture.id + "-away"}>
-  //             <p>{match.teams.away.name}</p>
-  //             <img alt="club crest" src={match.teams.away.logo} />
-  //           </div>
-  //         </div>
-  //           )
-  //         }
-
-  //       )
-  //   }
-  // };
 
   function getMatches(week) {
 
@@ -165,43 +126,41 @@ function Matches() {
           <option value="38">Week 38</option>
         </select>
       </div>
-      <div className="block justify-center">
       {matchList.map(match =>
         <div key={match.fixture.id + "Row"} className='flex justify-content-center flex-wrap h-20'>
 
-          <div className='w-1/3 p-2 flex justify-content-right flex-wrap' id={match.fixture.id + "-home"} >
-            <img className="object-scale-down inline" alt="club crest" src={match.teams.home.logo} />
-            <p className="sm:text-2xl">  {match.teams.home.name}</p>
+          <div className='w-1/3 p-2 flex justify-center items-center' id={match.fixture.id + "-home"} >
+            <img className="text-center object-scale-down inline" alt="club crest" src={match.teams.home.logo} />
+            <p className="sm:text-2xl text-center">  {match.teams.home.name}</p>
           </div>
 
          {(match.fixture.status.short === "NS") ?
-          <div className='w-1/3 p-2 justify-content-center' >
-            <input className="inline appearance-none block w-.05 bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} type="text" />
-            <p className="inline"> - </p>
-            <input className="inline appearance-none block w-.25 bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"} type="text" />
+          <div className='w-1/3 p-2 flex justify-center items-center' >
+            <input className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} type="text" />
+            <div className="flex w-8 h-px bg-gray-400 mx-5"></div>
+            <input className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"}  type="text" />
           </div>
         
         : match.fixture.status.short ==="PST" ?
 
 
-          <div className='w-1/3 md:p-2 justify-content-center content-center'>
+          <div className='w-1/3 p-2 flex justify-center items-center'>
             <p className="sm:text-2xl content-center">Postponed</p>
           </div>
 
         :
-          <div className='w-1/3 p-2 justify-content-center content-center'>
+          <div className='w-1/3 p-2 flex justify-center items-center'>
             <p className="sm:text-2xl">{match.goals.home} - {match.goals.away}</p>
           </div>
         }
 
-        <div className='w-1/3 p-2 flex flex-wrap justify-content-left' id={match.fixture.id + "-away"}>
+        <div className='w-1/3 p-2 flex justify-center items-center' id={match.fixture.id + "-away"}>
           <p className="inline sm:text-2xl">{match.teams.away.name}  </p>
           <img className="object-scale-down inline" alt="club crest" src={match.teams.away.logo} />
         </div>
       </div>
         )
       }
-      </div>
 
       </>
     );

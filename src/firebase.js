@@ -13,8 +13,12 @@ import {
   query,
   getDocs,
   collection,
-  where,
   addDoc,
+  where,
+  getDoc,
+  updateDoc,
+  deleteDoc, 
+  doc 
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -30,6 +34,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const predictionCollection = collection(db, "predictions");
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -92,6 +97,37 @@ const logout = () => {
   signOut(auth);
 };
 
+    
+    const addPredictions = (newPrediction) => {
+        return addDoc(predictionCollection, newPrediction);
+    };
+
+    const updatePrediction = (id, updatedPrediction) => {
+        const predictionRef = doc(db, "predictions", id);
+        return updateDoc(predictionRef, updatedPrediction);
+    };
+
+    // const getAllPredictions = getDocs(predictionCollection)
+    // .then(res => {
+
+    //     res.forEach((doc) => {
+    //       // doc.data() is never undefined for query doc snapshots
+    //       console.log(doc.id, " => ", doc.data());
+    // });
+    // });
+
+    async function getUserPredictions(userId)  {
+        const queryParams = query((predictionCollection), where("uid", "==", userId));
+        let predictionList = [];
+        const querySnapshot = await getDocs(queryParams);
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          predictionList.push(doc.data());
+        })
+        return predictionList;
+    }
+
+
 export {
   auth,
   db,
@@ -100,4 +136,6 @@ export {
   registerWithEmailAndPassword,
   sendPasswordReset,
   logout,
+  
+  getUserPredictions
 };

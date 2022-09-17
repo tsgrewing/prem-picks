@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import { auth, db, logout } from "../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
+import { getAllPredictions, getUserPredictions } from "../../firebase";
 
 function Standings() {
   const [user, loading, error] = useAuthState(auth);
   const [name, setName] = useState("");
   const [id, setId] = useState("");
   const navigate = useNavigate();
+  const [predictions, setPredictions] = useState({});
 
   const fetchUserName = async () => {
     try {
@@ -34,10 +36,24 @@ function Standings() {
     fetchUserName();
   }, [user, loading]);
 
+
+
+  function getUserPicks() {
+     getUserPredictions(id)
+     .then(res => {
+      setPredictions(res)
+        console.log(predictions)
+     });
+  };
+
   return (
     <div className="profile">
-        <h1>{name}</h1>
-        <h3>{user?.email}</h3>
+        <button onClick={getUserPicks}>Get Predictions</button>
+        {(predictions.length > 0) &&
+          <div>
+            <p> {predictions.home} - {predictions.away}</p>
+          </div>
+        }
     </div>
   );
 }
