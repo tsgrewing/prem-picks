@@ -128,6 +128,17 @@ const logout = () => {
         return predictionList;
     }
 
+    async function getRoundPredictions(round, userId)  {
+        const queryParams = query((predictionCollection), where("uid", "==", userId)).where("round", "==", round);
+        let predictionList = [];
+        const querySnapshot = await getDocs(queryParams);
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          predictionList.push(doc.data());
+        })
+        return predictionList;
+    }
+
     function sendUserPredictions(docId, predictions) {
         setDoc(doc(db, 'predictions', docId), predictions)
         .then(() => {
@@ -148,5 +159,6 @@ export {
   sendPasswordReset,
   logout,
   sendUserPredictions,
-  getUserPredictions
+  getUserPredictions,
+  getRoundPredictions
 };

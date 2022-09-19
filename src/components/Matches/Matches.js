@@ -41,12 +41,33 @@ function Matches() {
     setMatchList(matchArr);
   };
 
+  const getCurrentRound = async () => {
+    const config ={
+      method: 'get',
+      url: "https://v3.football.api-sports.io/fixtures/rounds?season=2022&league=39",
+      params: {league: "39", season:"2022", current: "true"},
+      headers: {
+        'x-rapidapi-key': rapidKey, 
+        'x-rapidapi-host': 'v3.football.api-sports.io'
+      }
+    };
+      axios(config)
+    .then(response => {
+      let week = response.data.response[0];
+      setWeek(week);
+      getMatches(week);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  };
+
   function getMatches(week) {
 
     const config = {
       method: 'get',
       url: "https://v3.football.api-sports.io/fixtures",
-      params: {league: 39, season: 2022, round: `Regular Season - ${week}`}, 
+      params: {league: 39, season: 2022, round: week}, 
       headers: {
         'x-rapidapi-key': rapidKey, 
         'x-rapidapi-host': 'v3.football.api-sports.io'
@@ -71,48 +92,57 @@ function Matches() {
       fetchUserName();
     }, [user, loading]);
 
+    useEffect(() => {
+      getCurrentRound();
+    }, []);
+
+    useEffect(() => {
+      getMatches();
+    }, []);
+
     return (
       <>
       <div className="ml-auto mr-auto relative w-64">
-        <select className="block w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" onChange={event => getMatches(event.target.value)}>
-          <option value="1">Week 1</option>
-          <option value="2">Week 2</option>
-          <option value="3">Week 3</option>
-          <option value="4">Week 4</option>
-          <option value="5">Week 5</option>
-          <option value="6">Week 6</option>
-          <option value="7">Week 7</option>
-          <option value="8">Week 8</option>
-          <option value="9">Week 9</option>
-          <option value="10">Week 10</option>
-          <option value="11">Week 11</option>
-          <option value="12">Week 12</option>
-          <option value="13">Week 13</option>
-          <option value="14">Week 14</option>
-          <option value="15">Week 15</option>
-          <option value="16">Week 16</option>
-          <option value="17">Week 17</option>
-          <option value="18">Week 18</option>
-          <option value="19">Week 19</option>
-          <option value="20">Week 20</option>
-          <option value="21">Week 21</option>
-          <option value="22">Week 22</option>
-          <option value="23">Week 23</option>
-          <option value="24">Week 24</option>
-          <option value="25">Week 25</option>
-          <option value="26">Week 26</option>
-          <option value="27">Week 27</option>
-          <option value="28">Week 28</option>
-          <option value="29">Week 29</option>
-          <option value="30">Week 30</option>
-          <option value="31">Week 31</option>
-          <option value="32">Week 32</option>
-          <option value="33">Week 33</option>
-          <option value="34">Week 34</option>
-          <option value="35">Week 35</option>
-          <option value="36">Week 36</option>
-          <option value="37">Week 37</option>
-          <option value="38">Week 38</option>
+        <select className="block w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" onChange={event => getMatches(`Regular Season - ${event.target.value}`)}>
+          <option value={"default"} disabled>Current Match Week</option>
+          <option value="1">Match Week 1</option>
+          <option value="2">Match Week 2</option>
+          <option value="3">Match Week 3</option>
+          <option value="4">Match Week 4</option>
+          <option value="5">Match Week 5</option>
+          <option value="6">Match Week 6</option>
+          <option value="7">Match Week 7</option>
+          <option value="8">Match Week 8</option>
+          <option value="9">Match Week 9</option>
+          <option value="10">Match Week 10</option>
+          <option value="11">Match Week 11</option>
+          <option value="12">Match Week 12</option>
+          <option value="13">Match Week 13</option>
+          <option value="14">Match Week 14</option>
+          <option value="15">Match Week 15</option>
+          <option value="16">Match Week 16</option>
+          <option value="17">Match Week 17</option>
+          <option value="18">Match Week 18</option>
+          <option value="19">Match Week 19</option>
+          <option value="20">Match Week 20</option>
+          <option value="21">Match Week 21</option>
+          <option value="22">Match Week 22</option>
+          <option value="23">Match Week 23</option>
+          <option value="24">Match Week 24</option>
+          <option value="25">Match Week 25</option>
+          <option value="26">Match Week 26</option>
+          <option value="27">Match Week 27</option>
+          <option value="28">Match Week 28</option>
+          <option value="29">Match Week 29</option>
+          <option value="30">Match Week 30</option>
+          <option value="31">Match Week 31</option>
+          <option value="32">Match Week 32</option>
+          <option value="33">Match Week 33</option>
+          <option value="34">Match Week 34</option>
+          <option value="35">Match Week 35</option>
+          <option value="36">Match Week 36</option>
+          <option value="37">Match Week 37</option>
+          <option value="38">Match Week 38</option>
         </select>
       </div>
       {matchList.map(match =>

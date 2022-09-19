@@ -6,7 +6,7 @@ import { auth, db, logout } from "../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import { getAllPredictions, getUserPredictions } from "../../firebase";
 
-function Standings() {
+function Profile() {
   const [user, loading, error] = useAuthState(auth);
   const [name, setName] = useState("");
   const [id, setId] = useState("");
@@ -61,4 +61,4 @@ function Standings() {
   );
 }
 
-export default Standings;
+export default Profile;
