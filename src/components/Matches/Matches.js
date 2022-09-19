@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "./Matches.css";
-import { auth, db, logout } from "../../firebase";
+import { auth, db, getRoundPredictions, logout } from "../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import axios from "axios";
 import {rapidKey} from "../../config.js"
@@ -15,6 +15,7 @@ function Matches() {
   const navigate = useNavigate();
   const [matchList, setMatchList] = useState([]);
   const [week, setWeek] = useState([]);
+  const [predictions, setPredictions] = useState({});
   
 
   const fetchUserName = async () => {
@@ -53,21 +54,22 @@ function Matches() {
     };
       axios(config)
     .then(response => {
-      let week = response.data.response[0];
-      setWeek(week);
-      getMatches(week);
+      let currentWeek = response.data.response[0];
+      setWeek(currentWeek);
+      getMatches(currentWeek);
+      getUserPredictions(currentWeek);
     })
     .catch(err => {
       console.log(err);
     });
   };
 
-  function getMatches(week) {
+  function getMatches(chosenWeek) {
 
     const config = {
       method: 'get',
       url: "https://v3.football.api-sports.io/fixtures",
-      params: {league: 39, season: 2022, round: week}, 
+      params: {league: 39, season: 2022, round: chosenWeek}, 
       headers: {
         'x-rapidapi-key': rapidKey, 
         'x-rapidapi-host': 'v3.football.api-sports.io'
@@ -82,28 +84,43 @@ function Matches() {
         console.log(error);
       });
 
-    setWeek(`Regular Season - ${week}`);
+    setWeek(`Regular Season - ${chosenWeek}`);
+  };
+
+  async function getUserPredictions(matchWeek) {
+    getRoundPredictions(id, matchWeek)
+    .then(res => {
+      if(res.length > 0) {
+     setPredictions(res[0].predictions)
+     console.log(res)
+      }
+    })
+   
+  }
+  
+  async function updateMatches (matchWeek){
+    getMatches(matchWeek);
+    getUserPredictions(matchWeek);
   }
 
-    useEffect(() => {
-      if (loading) return;
-      if (!user) return navigate("/");
+  useEffect(() => {
+    if (loading) return;
+    if (!user) return navigate("/");
 
-      fetchUserName();
-    }, [user, loading]);
+    fetchUserName();
+  }, [user, loading]);
 
-    useEffect(() => {
-      getCurrentRound();
-    }, []);
+  useEffect(() => {
+    getCurrentRound();
+  }, []);
 
-    useEffect(() => {
-      getMatches();
-    }, []);
+
+
 
     return (
       <>
       <div className="ml-auto mr-auto relative w-64">
-        <select className="block w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" onChange={event => getMatches(`Regular Season - ${event.target.value}`)}>
+        <select defaultValue={"default"} className="block w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" onChange={event => updateMatches(`Regular Season - ${event.target.value}`)}>
           <option value={"default"} disabled>Current Match Week</option>
           <option value="1">Match Week 1</option>
           <option value="2">Match Week 2</option>
@@ -170,6 +187,7 @@ function Matches() {
         :
           <div className='w-1/3 p-2 flex justify-center items-center'>
             <p className="sm:text-2xl">{match.goals.home} - {match.goals.away}</p>
+            {/* <p className="sm:text-xl">{match.goals.home} - {match.goals.away}</p> */}
           </div>
         }
 

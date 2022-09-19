@@ -117,8 +117,8 @@ const logout = () => {
     // });
     // });
 
-    async function getUserPredictions(userId)  {
-        const queryParams = query((predictionCollection), where("uid", "==", userId));
+    async function getRoundPredictions(userId, round)  {
+        const queryParams = query((predictionCollection), where("uid", "==", userId), (where("round", "==", round)));
         let predictionList = [];
         const querySnapshot = await getDocs(queryParams);
         querySnapshot.forEach((doc) => {
@@ -128,16 +128,30 @@ const logout = () => {
         return predictionList;
     }
 
-    async function getRoundPredictions(round, userId)  {
-        const queryParams = query((predictionCollection), where("uid", "==", userId)).where("round", "==", round);
-        let predictionList = [];
-        const querySnapshot = await getDocs(queryParams);
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          predictionList.push(doc.data());
-        })
-        return predictionList;
-    }
+    // async function getRoundPredictions(round, userId)  {
+    //     const queryParams = query((predictionCollection), where("uid", "==", userId)), where("round", "==", round);
+    //     let predictionList = [];
+    //     const querySnapshot = await getDocs(queryParams);
+    //     querySnapshot.forEach((doc) => {
+    //       // doc.data() is never undefined for query doc snapshots
+    //       predictionList.push(doc.data());
+    //     })
+    //     return predictionList;
+    // }
+
+    // function getRoundPredictions (round, userId) {
+    //     let predictionList = [];
+    //     db.collection("predictions")
+    //     .where("uid", "==", userId)
+    //     .where("round", "==", round)
+    //     .get()
+    //     .then(querySnapshot => {
+    //         querySnapshot.forEach((doc) => {
+    //             predictionList.push(doc.data())
+    //         })
+    //         console.log(predictionList);
+    //     })
+    // }
 
     function sendUserPredictions(docId, predictions) {
         setDoc(doc(db, 'predictions', docId), predictions)
@@ -159,6 +173,5 @@ export {
   sendPasswordReset,
   logout,
   sendUserPredictions,
-  getUserPredictions,
   getRoundPredictions
 };

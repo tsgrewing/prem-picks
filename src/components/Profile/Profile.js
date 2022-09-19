@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import { auth, db, logout } from "../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
-import { getAllPredictions, getUserPredictions } from "../../firebase";
+import { getAllPredictions } from "../../firebase";
 
 function Profile() {
   const [user, loading, error] = useAuthState(auth);
@@ -39,11 +39,13 @@ function Profile() {
 
 
   function getUserPicks() {
-     getUserPredictions(id)
-     .then(res => {
-      setPredictions(res)
-        console.log(predictions)
-     });
+    //  getUserPredictions(id, "Regular Season - 1")
+    //  .then(res => {
+    //   setPredictions(res[0].predictions)
+    //  })
+    //  .then(() =>{
+    //   console.log(predictions)
+    // });
   };
 
   return (
@@ -52,7 +54,7 @@ function Profile() {
         {(predictions.length > 0) &&
           <div>
             {predictions.map(doc => 
-            <p key={doc.id}> {doc.home} - {doc.away}</p>
+            <p key={doc.id}> {doc.home.name} {doc.home.score} - {doc.away.score} {doc.away.name}</p>
             ) 
           }
           </div>
