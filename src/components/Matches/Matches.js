@@ -5,20 +5,7 @@ import "./Matches.css";
 import { auth, db, logout } from "../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import axios from "axios";
-
-// const api = 'https://api.football-data.org/v4/competitions/PL/matches?matchday=11'; 
-// axios.get(api , { 
-//     headers: {
-//         "X-Auth-Token" : `c135ba6432b14929b9ad305e4d8e1fed`,
-//         "Access-Control-Allow-Origin": '*'
-//     } 
-// })
-// .then(res => {
-//     console.log(res.data)
-// })
-// .catch((err) => {
-//     console.log(err)
-// });
+import {rapidKey} from "../../config.js"
 
 
 function Matches() {
@@ -27,8 +14,8 @@ function Matches() {
   const [id, setId] = useState("");
   const navigate = useNavigate();
   const [matchList, setMatchList] = useState([]);
+  const [week, setWeek] = useState([]);
   
-
 
   const fetchUserName = async () => {
     try {
@@ -61,7 +48,7 @@ function Matches() {
       url: "https://v3.football.api-sports.io/fixtures",
       params: {league: 39, season: 2022, round: `Regular Season - ${week}`}, 
       headers: {
-        'x-rapidapi-key': '89ca8fcfc72177c020455dd5f9ec0220',
+        'x-rapidapi-key': rapidKey, 
         'x-rapidapi-host': 'v3.football.api-sports.io'
       }
     };
@@ -73,7 +60,9 @@ function Matches() {
       .catch(function (error) {
         console.log(error);
       });
-    }
+
+    setWeek(`Regular Season - ${week}`);
+  }
 
     useEffect(() => {
       if (loading) return;

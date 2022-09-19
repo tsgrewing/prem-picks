@@ -18,7 +18,8 @@ import {
   getDoc,
   updateDoc,
   deleteDoc, 
-  doc 
+  doc,
+  setDoc
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -98,14 +99,14 @@ const logout = () => {
 };
 
     
-    const addPredictions = (newPrediction) => {
-        return addDoc(predictionCollection, newPrediction);
-    };
+    // const addPredictions = (newPrediction) => {
+    //     return addDoc(predictionCollection, newPrediction);
+    // };
 
-    const updatePrediction = (id, updatedPrediction) => {
-        const predictionRef = doc(db, "predictions", id);
-        return updateDoc(predictionRef, updatedPrediction);
-    };
+    // const updatePrediction = (id, updatedPrediction) => {
+    //     const predictionRef = doc(db, "predictions", id);
+    //     return updateDoc(predictionRef, updatedPrediction);
+    // };
 
     // const getAllPredictions = getDocs(predictionCollection)
     // .then(res => {
@@ -127,6 +128,16 @@ const logout = () => {
         return predictionList;
     }
 
+    function sendUserPredictions(docId, predictions) {
+        setDoc(doc(db, 'predictions', docId), predictions)
+        .then(() => {
+            console.log("Predictions updated!")
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
 
 export {
   auth,
@@ -136,6 +147,6 @@ export {
   registerWithEmailAndPassword,
   sendPasswordReset,
   logout,
-  
+  sendUserPredictions,
   getUserPredictions
 };

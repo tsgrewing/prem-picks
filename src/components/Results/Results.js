@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "./Results.css";
-import { auth, db, logout } from "../../firebase";
+import { auth, db, logout, sendUserPredictions } from "../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
+
 
 function Results() {
   const [user, loading, error] = useAuthState(auth);
@@ -12,7 +13,7 @@ function Results() {
   const navigate = useNavigate();
   const [predictionsList, setPredictions] = useState([]);
 
-  const week = "Regular Season - 11"
+  const week = "11"
 let predictions = [];
 
   const fixtureList = [
@@ -728,14 +729,16 @@ let predictions = [];
 
 //   Update prediction on input change
 
-  function updatePrediction (matchId, side, score) {
+  function updatePrediction (matchId, side, score, teamName) {
     let matchExists = predictions.find((match, i) => {
         if (match.id === matchId && side === "away") {
-            predictions[i].away = score
+            predictions[i].away.score = score;
+            predictions[i].away.name = teamName;
             return true;
         }
         else if (match.id === matchId && side === 'home') {
-            predictions[i].home = score;
+            predictions[i].home.score = score;
+            predictions[i].home.name = teamName;
             return true;
         }
         else {
@@ -745,10 +748,10 @@ let predictions = [];
 
     if (!matchExists) {
         if (side === 'away') {
-            predictions.push({id: matchId, week: week, away: score, uid: id, user: user})
+            predictions.push({id: matchId, away: { score: score, name: teamName }, home: { score: '', name: ''}, user: name })
         }
         else if (side === 'home') {
-            predictions.push({id: matchId, week: week, home: score, uid: id, user: user})
+            predictions.push({id: matchId, home:{ score: score, name: teamName }, away: { score: '', name: '' }, user: name})
         }
     }
   }
@@ -756,7 +759,16 @@ let predictions = [];
 // Save predictions and push to database
 
   function savePredictions(){
+    const docId = `Week ${week} - ${id}` 
+    const predictionDoc = {
+        round: week,
+        user: name,
+        uid: id,
+        predictions: predictions
+    };
     setPredictions(predictions);
+    sendUserPredictions(docId, predictionDoc)
+    
     // console.log(predictionsList);
   }
 
@@ -814,9 +826,9 @@ let predictions = [];
 
          {(match.fixture.status.short === "NS") ?
           <div className='w-1/3 p-2 flex justify-center items-center' id={match.fixture.id}>
-            <input name="home" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} onChange={event => updatePrediction(event.target.parentElement.id, event.target.name, event.target.value, match.league.round)} type="text" />
+            <input data-teamname={match.teams.home.name} name="home" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="text" />
             <div className="flex w-8 h-px bg-gray-400 mx-5"></div>
-            <input name="away" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"}  onChange={event => updatePrediction(event.target.parentElement.id, event.target.name, event.target.value, )} type="text" />
+            <input data-teamname={match.teams.away.name} name="away" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"}  onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="text" />
           </div>
         
         : match.fixture.status.short ==="PST" ?
