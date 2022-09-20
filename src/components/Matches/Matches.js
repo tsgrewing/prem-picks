@@ -40,6 +40,7 @@ function Matches() {
 
   function setMatches(matchArr){
     setMatchList(matchArr);
+    console.log(matchList)
   };
 
   const getCurrentRound = async () => {
@@ -77,14 +78,14 @@ function Matches() {
     };
 
     axios(config)
-      .then(function (response) {
+      .then((response) => {
         setMatches(response.data.response);
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
 
-    setWeek(`Regular Season - ${chosenWeek}`);
+    setWeek(chosenWeek);
   };
 
   async function getUserPredictions(matchWeek) {
@@ -172,9 +173,9 @@ function Matches() {
 
          {(match.fixture.status.short === "NS") ?
           <div className='w-1/3 p-2 flex justify-center items-center' >
-            <input className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} type="text" />
+            <input className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} type="number" />
             <div className="flex w-8 h-px bg-gray-400 mx-5"></div>
-            <input className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"}  type="text" />
+            <input className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"}  type="number" />
           </div>
         
         : match.fixture.status.short ==="PST" ?
@@ -187,7 +188,12 @@ function Matches() {
         :
           <div className='w-1/3 p-2 flex justify-center items-center'>
             <p className="sm:text-2xl">{match.goals.home} - {match.goals.away}</p>
-            {/* <p className="sm:text-xl">{match.goals.home} - {match.goals.away}</p> */}
+            {/* {(predictions.length > 0) &&
+            
+            <div>
+
+            </div>
+            } */}
           </div>
         }
 

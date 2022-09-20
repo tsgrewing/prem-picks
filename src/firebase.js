@@ -36,6 +36,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const predictionCollection = collection(db, "predictions");
+const standingsCollection = collection(db, "standings");
+const resultsCollection = collection(db, "results");
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -117,8 +119,19 @@ const logout = () => {
     // });
     // });
 
-    async function getRoundPredictions(userId, round)  {
-        const queryParams = query((predictionCollection), where("uid", "==", userId), (where("round", "==", round)));
+    async function getRoundPredictions(round)  {
+        let queryParams = query((predictionCollection), (where("round", "==", round)));
+        let predictionList = [];
+        const querySnapshot = await getDocs(queryParams);
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          predictionList.push(doc.data());
+        })
+        return predictionList;
+    }
+
+    async function getUserPredictions(userId, round)  {
+        let queryParams = query((predictionCollection), where("uid", "==", userId), (where("round", "==", round)));
         let predictionList = [];
         const querySnapshot = await getDocs(queryParams);
         querySnapshot.forEach((doc) => {
@@ -161,6 +174,21 @@ const logout = () => {
         .catch(err => {
             console.log(err)
         })
+    };
+
+    const getStandings = async (season, round) => {
+
+    };
+
+    const getResults = async (round) => {
+        const queryParams = query((predictionCollection), (where("round", "==", round)));
+        let predictionList = [];
+        const querySnapshot = await getDocs(queryParams);
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          predictionList.push(doc.data());
+        })
+        return predictionList;
     }
 
 
@@ -173,5 +201,6 @@ export {
   sendPasswordReset,
   logout,
   sendUserPredictions,
-  getRoundPredictions
+  getRoundPredictions,
+  getUserPredictions
 };
