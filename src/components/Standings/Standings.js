@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "./Standings.css";
-import { auth, db, getRoundPredictions, logout } from "../../firebase";
+import { auth, db, getRoundPredictions, logout, updatePredictionResults } from "../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import axios from "axios";
 import {rapidKey} from "../../config.js"
@@ -46,13 +46,67 @@ function Standings() {
     .then(response => {
       let week = response.data.response[0];
       setWeek(week);
-      console.log(week);
+      console.log(week)
+      resultTable(week)
     })
     .catch(err => {
       console.log(err);
     });
   };
 
+  let predictionArray =[];
+
+  async function scorePredictions() {
+  
+    predictions.forEach(person => {
+      let userPrediction = person;
+      userPrediction.results = {
+      exactos: 0,
+      correct: 0,
+      incorrect: 0,
+      roundScore: 0
+      };
+      userPrediction.bgColor ="";
+       
+      userPrediction.predictions.forEach(game => {      
+        const matchObj = matchList.find(obj => {
+                    return obj.fixture.id === game.id
+                  })
+        
+        if (matchObj.goals.home == game.home.score && matchObj.goals.away == game.away.score) {
+            userPrediction.results.exactos ++;
+            userPrediction.results.roundScore = +3;
+            game.result = "exacto";
+            game.colors = "bg-green-200"
+        }
+        else if ((matchObj.goals.home > matchObj.goals.away && game.home.score > game.away.score) || (matchObj.goals.home < matchObj.goals.away && game.home.score < game.away.score) || (matchObj.goals.home === matchObj.goals.away && game.home.score === game.away.score)) {
+          userPrediction.results.correct ++;
+          userPrediction.results.roundScore ++;
+          game.result = "correct";
+          game.colors = "bg-lime-100"
+
+        }
+        else {
+          game.result = "incorrect";
+          userPrediction.results.incorrect ++;
+          game.colors = "bg-red-200"
+        }
+        
+      })
+      predictionArray.push(userPrediction) 
+      // setPredictions(predictionArray)
+    })
+  
+    predictionArray.forEach(doc => {
+      const docId = `${doc.round} - ${doc.uid}`
+      updatePredictionResults(docId, doc)
+    })
+
+      console.log(predictionArray)
+      // predictionArray.sort((a,b) => (a.results.roundScore > b.results.roundScore ? 1:-1))
+
+  };
+  
 
   // const compileStandings = async (currentWeek) => {
   //   let weekNum = currentWeek.slice(-2).trim();
@@ -82,7 +136,6 @@ function Standings() {
 
   function setMatches(matchArr){
     setMatchList(matchArr);
-    console.log(matchList)
   };
 
   async function resultTable(round) {
@@ -90,11 +143,15 @@ function Standings() {
     await getRoundPredictions(round)
     .then(res => {
       setPredictions(res)
+      scorePredictions()
+
     });
+
   };
 
   const isReady  = () => {
     if (predictions.length > 0 && matchList.length > 0) {
+      scorePredictions();
       return true;
     }
     else {
@@ -102,9 +159,9 @@ function Standings() {
     }
   }
 
-  // useEffect(() => {
-  //   getCurrentRound();
-  // }, []);
+  useEffect(() => {
+    getCurrentRound();
+  }, []);
 
   useEffect(() => {
     if (loading) return;
@@ -180,12 +237,12 @@ function Standings() {
 
               </td>
               <td className="border-collapse border border-slate-500 text-center">{match.goals.home} - {match.goals.away}</td>
-              {predictions.map(doc => {
+              {predictionArray.map(doc => {
                 const matchObj = doc.predictions.find(obj => {
                   return obj.id === match.fixture.id
                 })
                 return (
-                  <td className="border-collapse border border-slate-500 text-center">{matchObj.home.score} - {matchObj.away.score}</td>
+                  <td className={"border-collapse border border-slate-500 text-center " + matchObj.colors}>{matchObj.home.score} - {matchObj.away.score}</td>
                 )} 
               )}
             </tr>

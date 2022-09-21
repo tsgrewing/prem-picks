@@ -779,10 +779,10 @@ function Results() {
 
     if (!matchExists) {
         if (side === 'away') {
-            predictions.push({id: matchId, away: { score: score, name: teamName }, home: { score: '', name: ''}, user: name })
+            predictions.push({id: matchId, away: { score: score, name: teamName }, home: { score: '', name: ''}})
         }
         else if (side === 'home') {
-            predictions.push({id: matchId, home:{ score: score, name: teamName }, away: { score: '', name: '' }, user: name})
+            predictions.push({id: matchId, home:{ score: score, name: teamName }, away: { score: '', name: '' }})
         }
     }
   }
@@ -790,11 +790,11 @@ function Results() {
 // Save predictions and push to database
 
   function savePredictions(){
-    const docId = `${week} - ${id}` 
+    const docId = `${week} - ${222}` 
     const predictionDoc = {
         round: week,
-        user: name,
-        uid: id,
+        user: "Andrew Olson",
+        uid: "222",
         predictions: predictions
     };
     setPredictions(predictions);
@@ -857,9 +857,9 @@ function Results() {
 {/* 
          {(match.fixture.status.short === "NS") ? */}
           <div className='w-1/3 p-2 flex justify-center items-center' id={match.fixture.id}>
-            <input data-teamname={match.teams.home.name} name="home" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="text" />
+            <input data-teamname={match.teams.home.name} name="home" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl text-center leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="number" />
             <div className="flex w-8 h-px bg-gray-400 mx-5"></div>
-            <input data-teamname={match.teams.away.name} name="away" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"}  onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="text" />
+            <input data-teamname={match.teams.away.name} name="away" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl text-center leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"}  onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="number" />
           </div>
         
       {  // : match.fixture.status.short ==="PST" ?

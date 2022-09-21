@@ -125,6 +125,7 @@ const logout = () => {
         const querySnapshot = await getDocs(queryParams);
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
+        
           predictionList.push(doc.data());
         })
         return predictionList;
@@ -140,6 +141,8 @@ const logout = () => {
         })
         return predictionList;
     }
+
+
 
     // async function getRoundPredictions(round, userId)  {
     //     const queryParams = query((predictionCollection), where("uid", "==", userId)), where("round", "==", round);
@@ -176,20 +179,30 @@ const logout = () => {
         })
     };
 
+    function updatePredictionResults(docId, obj) {
+        updateDoc(doc(db, 'predictions', docId), obj)
+        .then(() => {
+            console.log("Predictions updated!")
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
     const getStandings = async (season, round) => {
 
     };
 
-    const getResults = async (round) => {
-        const queryParams = query((predictionCollection), (where("round", "==", round)));
-        let predictionList = [];
-        const querySnapshot = await getDocs(queryParams);
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          predictionList.push(doc.data());
-        })
-        return predictionList;
-    }
+    // const getResults = async (round) => {
+    //     const queryParams = query((predictionCollection), (where("round", "==", round)));
+    //     let predictionList = [];
+    //     const querySnapshot = await getDocs(queryParams);
+    //     querySnapshot.forEach((doc) => {
+    //       // doc.data() is never undefined for query doc snapshots
+    //       predictionList.push(doc.data());
+    //     })
+    //     return predictionList;
+    // }
 
 
 export {
@@ -202,5 +215,6 @@ export {
   logout,
   sendUserPredictions,
   getRoundPredictions,
-  getUserPredictions
+  getUserPredictions,
+  updatePredictionResults
 };
