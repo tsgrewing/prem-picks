@@ -37,7 +37,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const predictionCollection = collection(db, "predictions");
 const standingsCollection = collection(db, "standings");
-const resultsCollection = collection(db, "results");
+// const resultsCollection = collection(db, "results");
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -142,7 +142,64 @@ const logout = () => {
         return predictionList;
     }
 
+    async function getCurrentStats(userId) {
+        const standingsSnapshot = await getDoc(doc(db, "standings", userId));
+        try {
+            // standingsSnapshot.data();
+            return standingsSnapshot.data();
+        } catch(err) { console.log(err)}
+    };
 
+    async function getAllStandings() {
+        let standingsArray = [];
+        const standingsObj = await getDocs(standingsCollection);
+        standingsObj.forEach(doc => {
+            standingsArray.push(doc.data())
+        })
+        console.log(standingsArray)
+        return (
+            standingsArray.sort((a, b) => (Number(a.score) > Number(b.score) ? -1 : 1))
+        )
+    };
+
+    async function updateStandings (docId, newStats) {
+        updateDoc(doc(db, 'standings', docId), newStats)
+        .then(() => {
+            console.log("Stats updated!")
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
+    async function getStandings() {
+        const querySnapshot = await getDocs((predictionCollection));
+        
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            let resData = doc.data();
+            if (resData.results) {
+                getCurrentStats(`${resData.uid} - 2022`)
+                .then(res => {
+                    // console.log(res.rounds)
+                    let updatedStats = {
+                        rounds: []
+                    };
+                    if (res.rounds.indexOf(resData.round) === -1) {
+                        updatedStats.exactos = resData.results.exactos + res.exactos;
+                        updatedStats.correct = resData.results.correct + res.correct;
+                        updatedStats.incorrect = resData.results.incorrect + res.incorrect;
+                        updatedStats.score = resData.results.roundScore + res.score;
+                        updatedStats.rounds = (res.rounds);
+                        updatedStats.rounds.push(resData.round);
+
+                        updateStandings(`${resData.uid} - 2022`, updatedStats)
+                    }
+                })
+         
+            }
+          })
+    }
 
     // async function getRoundPredictions(round, userId)  {
     //     const queryParams = query((predictionCollection), where("uid", "==", userId)), where("round", "==", round);
@@ -179,35 +236,17 @@ const logout = () => {
         })
     };
 
-    async function updatePredictionResults(docId, obj) {
-        // let queryParams = query((predictionCollection), (where("round", "==", docId)));
-        // let predictionList = [];
-        console.log(obj)
-        let uid = obj.uid;
-        // let round = docId;
-        // let roundArr = obj[uid].rounds;
-        const querySnapshot = await getDocs(standingsCollection);
-        querySnapshot.forEach((doc) => {
-            let data = doc.data()
-            if(data[uid]){
-            console.log(data[uid].rounds)}
-            // check rounds array to see if current round has been scored
-            // if (!doc.data()[obj.uid].rounds.indexOf(docId)){
-            //     console.log(obj)
-            // }
-            // else {
-            //     return;
-            // }
-          // doc.data() is never undefined for query doc snapshots
-        
-          console.log(doc.data());
+    function updatePredictionResults(docId, obj) {
+        updateDoc(doc(db, 'predictions', docId), obj)
+        .then(() => {
+            console.log("Predictions updated!")
         })
-        // return predictionList;
+        .catch(err => {
+            console.log(err)
+        })
     }
 
-    const updateStandings = async (round, obj) => {
 
-    };
 
     // const getResults = async (round) => {
     //     const queryParams = query((predictionCollection), (where("round", "==", round)));
@@ -232,5 +271,7 @@ export {
   sendUserPredictions,
   getRoundPredictions,
   getUserPredictions,
-  updatePredictionResults
+  updatePredictionResults,
+  getStandings,
+  getAllStandings
 };

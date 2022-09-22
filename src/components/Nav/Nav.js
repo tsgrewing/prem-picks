@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { Transition } from "@headlessui/react";
 
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../firebase";
+import ReactDOM from 'react-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+
+
 function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -45,6 +53,13 @@ function Nav() {
                   >
                     Profile
                   </a>
+
+                  <button
+                    onClick={logout}
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Logout
+                  </button>
                 </div>
               </div>
             </div>
@@ -134,9 +149,18 @@ function Nav() {
                 >
                   Profile
                 </a>
+                <button
+                    onClick={logout}
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Logout
+                  </button>
 
-              </div>
+              <div className="justify-content-right align-content-right">
+                <FontAwesomeIcon icon="faRightFromBracket" />
+                </div>
             </div>
+              </div>
           )}
         </Transition>
       </nav>

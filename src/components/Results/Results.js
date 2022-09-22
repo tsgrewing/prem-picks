@@ -784,9 +784,9 @@ function Results() {
     })
   
     predictionArray.forEach(doc => {
-      // const docId = `${doc.round} - ${doc.uid}`
-      // updatePredictionResults(docId, doc);
-      updatePredictionResults(doc.round, doc.results);
+      const docId = `${doc.round} - ${doc.uid}`
+      updatePredictionResults(docId, doc);
+      // updatePredictionResults(doc.round, doc.results);
     })
       // updateStandings();
       // console.log(predictionArray)

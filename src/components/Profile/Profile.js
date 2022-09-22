@@ -1009,24 +1009,18 @@ function scorePredictions() {
           userPrediction.results.exactos ++;
           userPrediction.results.roundScore = +3;
           game.result = "exacto";
-        // console.log(person.exactos)
-//         console.log(game.user + " - " + matchObj.teams.home.name + " vs " + matchObj.teams.away.name)
-//         console.log("exacto")
+
       }
       else if ((matchObj.goals.home >= matchObj.goals.away && game.home.score >= game.away.score) || (matchObj.goals.home < matchObj.goals.away && game.home.score < game.away.score)) {
         userPrediction.results.correct ++;
         userPrediction.results.roundScore ++;
         game.result = "correct";
-        // console.log("correct - " + person.correct)
-//         console.log(game.user + " - " + matchObj.teams.home.name + " vs " + matchObj.teams.away.name)
-//         console.log("correct")
+
       }
       else {
         game.result = "incorrect";
         userPrediction.results.incorrect ++;
-        // console.log("incorrect - " + person.correct)
-        // console.log(game.user + " - " + matchObj.teams.home.name + " vs " + matchObj.teams.away.name)
-        // console.log("incorrect")
+
       }
       
     })
@@ -1035,10 +1029,10 @@ function scorePredictions() {
     setPredictions(predictionArray)
   })
 
-  predictionArray.forEach(doc => {
-    const docId = `${doc.round} - ${doc.uid}`
-    updatePredictionResults(docId, doc)
-  })
+  // predictionArray.forEach(doc => {
+  //   const docId = `${doc.round} - ${doc.uid}`
+  //   updatePredictionResults(docId, doc)
+  // })
 };
 
 
