@@ -179,17 +179,33 @@ const logout = () => {
         })
     };
 
-    function updatePredictionResults(docId, obj) {
-        updateDoc(doc(db, 'predictions', docId), obj)
-        .then(() => {
-            console.log("Predictions updated!")
+    async function updatePredictionResults(docId, obj) {
+        // let queryParams = query((predictionCollection), (where("round", "==", docId)));
+        // let predictionList = [];
+        console.log(obj)
+        let uid = obj.uid;
+        // let round = docId;
+        // let roundArr = obj[uid].rounds;
+        const querySnapshot = await getDocs(standingsCollection);
+        querySnapshot.forEach((doc) => {
+            let data = doc.data()
+            if(data[uid]){
+            console.log(data[uid].rounds)}
+            // check rounds array to see if current round has been scored
+            // if (!doc.data()[obj.uid].rounds.indexOf(docId)){
+            //     console.log(obj)
+            // }
+            // else {
+            //     return;
+            // }
+          // doc.data() is never undefined for query doc snapshots
+        
+          console.log(doc.data());
         })
-        .catch(err => {
-            console.log(err)
-        })
+        // return predictionList;
     }
 
-    const getStandings = async (season, round) => {
+    const updateStandings = async (round, obj) => {
 
     };
 

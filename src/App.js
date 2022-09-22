@@ -7,10 +7,11 @@ import Register from "./components/Register/Register";
 import Reset from "./components/Reset/Reset";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Nav from "./components/Nav/Nav";
-import Standings from "./components/Standings/Standings";
-import Profile from "./components/Profile/Profile";
 import Results from "./components/Results/Results";
+import Profile from "./components/Profile/Profile";
+import Admin from "./components/Admin/Admin";
 import Matches from "./components/Matches/Matches";
+import Standings from "./components/Standings/Standings"
 
 
 function App() {
