@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "./Matches.css";
-import { auth, db, getRoundPredictions, logout } from "../../firebase";
+import { auth, db, getRoundPredictions, getUserPredictions, logout, sendUserPredictions } from "../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import axios from "axios";
 import {rapidKey} from "../../config.js"
@@ -15,9 +15,10 @@ function Matches() {
   const navigate = useNavigate();
   const [matchList, setMatchList] = useState([]);
   const [week, setWeek] = useState([]);
-  const [predictions, setPredictions] = useState({});
+  const [predictionsList, setPredictions] = useState({});
+  const [submit, setSubmit] = useState({});
   
-
+  let predictions =[];
   const fetchUserName = async () => {
     try {
       const q = query(collection(db, "users"), where("uid", "==", user?.uid));
@@ -79,17 +80,32 @@ function Matches() {
 
     axios(config)
       .then((response) => {
-        setMatches(response.data.response);
+        const matchArray = (response.data.response);
+        setMatches(matchArray);
+        for(let i=0; i <matchArray.length; i++){
+          if(matchArray[i].fixture.status.short === "NS"){
+            console.log(matchArray[i].fixture.status.short)
+            setSubmit(true);
+            break;
+          }
+          else {
+            setSubmit(false);
+          }
+
+        }
+        
       })
       .catch((error) => {
         console.log(error);
       });
 
+
+
     setWeek(chosenWeek);
   };
 
-  async function getUserPredictions(matchWeek) {
-    getRoundPredictions(id, matchWeek)
+  async function getPredictions(matchWeek) {
+    getUserPredictions(id, matchWeek)
     .then(res => {
       if(res.length > 0) {
      setPredictions(res[0].predictions)
@@ -98,10 +114,53 @@ function Matches() {
     })
    
   }
+
+  function updatePrediction (matchId, side, score, teamName) {
+    let matchExists = predictions.find((match, i) => {
+        if (match.id === matchId && side === "away") {
+            predictions[i].away.score = score;
+            predictions[i].away.name = teamName;
+            return true;
+        }
+        else if (match.id === matchId && side === 'home') {
+            predictions[i].home.score = score;
+            predictions[i].home.name = teamName;
+            return true;
+        }
+        else {
+            return false;
+        };
+    });
+
+    if (!matchExists) {
+        if (side === 'away') {
+            predictions.push({id: matchId, away: { score: score, name: teamName }, home: { score: '', name: ''}})
+        }
+        else if (side === 'home') {
+            predictions.push({id: matchId, home:{ score: score, name: teamName }, away: { score: '', name: '' }})
+        }
+    }
+  }
+
+  // Save predictions and push to database
+
+  function savePredictions(){
+    const docId = `${week} - ${id}` 
+    const predictionDoc = {
+        round: week,
+        user: name,
+        uid: id,
+        predictions: predictions
+    };
+    setPredictions(predictions);
+    sendUserPredictions(docId, predictionDoc)
+    
+    // console.log(predictionsList);
+  }
   
   async function updateMatches (matchWeek){
     getMatches(matchWeek);
-    getUserPredictions(matchWeek);
+    getPredictions(matchWeek);
   }
 
   useEffect(() => {
@@ -172,10 +231,10 @@ function Matches() {
           </div>
 
          {(match.fixture.status.short === "NS") ?
-          <div className='w-1/3 p-2 flex justify-center items-center' >
-            <input className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} type="number" />
+          <div className='w-1/3 p-2 flex justify-center items-center' id={match.fixture.id}>
+            <input data-teamname={match.teams.home.name} name="home" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl text-center leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="number" />
             <div className="flex w-8 h-px bg-gray-400 mx-5"></div>
-            <input className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"}  type="number" />
+            <input data-teamname={match.teams.away.name} name="away" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl text-center leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"}  onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="number" />
           </div>
         
         : match.fixture.status.short ==="PST" ?
@@ -204,6 +263,15 @@ function Matches() {
       </div>
         )
       }
+                  
+            {/* Button */}
+            {submit &&
+            <div className="flex mt-5 content-center justify-center">
+            <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={savePredictions}>
+                Submit
+            </button>
+            </div>
+            }
 
       </>
     );

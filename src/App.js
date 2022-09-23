@@ -31,6 +31,7 @@ function App() {
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/results" element={<Results />} />
           <Route exact path="/matches" element={<Matches />} />
+          <Route exact path="/admin" element={<Admin />} />
 
         </Routes>
       </main>

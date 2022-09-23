@@ -128,6 +128,7 @@ const logout = () => {
         
           predictionList.push(doc.data());
         })
+        console.log(predictionList)
         return predictionList;
     }
 
@@ -140,6 +141,17 @@ const logout = () => {
           predictionList.push(doc.data());
         })
         return predictionList;
+    }
+
+    async function getAllUserPredictions(userId) {
+      let queryParams = query((predictionCollection), where("uid", "==", userId));
+      let predictionList = [];
+      const querySnapshot = await getDocs(queryParams);
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        predictionList.push(doc.data());
+      })
+      return predictionList;
     }
 
     async function getCurrentStats(userId) {
@@ -162,7 +174,8 @@ const logout = () => {
         )
     };
 
-    async function updateStandings (docId, newStats) {
+    async function updateStandings (newStats) {
+        const docId = `${newStats.userId} - 2022`
         updateDoc(doc(db, 'standings', docId), newStats)
         .then(() => {
             console.log("Stats updated!")
@@ -172,35 +185,37 @@ const logout = () => {
         })
     }
 
-    async function getStandings() {
-        const querySnapshot = await getDocs((predictionCollection));
+    // async function getStandings() {
+    //     const querySnapshot = await getDocs((predictionCollection));
         
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            let resData = doc.data();
-            if (resData.results) {
-                getCurrentStats(`${resData.uid} - 2022`)
-                .then(res => {
-                    // console.log(res.rounds)
-                    let updatedStats = {
-                        rounds: []
-                    };
-                    if (res.rounds.indexOf(resData.round) === -1) {
-                        updatedStats.exactos = resData.results.exactos + res.exactos;
-                        updatedStats.correct = resData.results.correct + res.correct;
-                        updatedStats.incorrect = resData.results.incorrect + res.incorrect;
-                        updatedStats.score = resData.results.roundScore + res.score;
-                        updatedStats.rounds = (res.rounds);
-                        updatedStats.rounds.push(resData.round);
+    //     querySnapshot.forEach((doc) => {
+    //         // doc.data() is never undefined for query doc snapshots
+    //         let resData = doc.data();
+    //         if (resData.results) {
+    //             getCurrentStats(`${resData.uid} - 2022`)
+    //             .then(res => {
+    //                 // console.log(res.rounds)
+    //                 let updatedStats = {
+    //                     rounds: []
+    //                 };
+    //                 if (res.rounds.indexOf(resData.round) === -1) {
+    //                     updatedStats.exactos = resData.results.exactos + res.exactos;
+    //                     updatedStats.correct = resData.results.correct + res.correct;
+    //                     updatedStats.incorrect = resData.results.incorrect + res.incorrect;
+    //                     updatedStats.score = resData.results.roundScore + res.score;
+    //                     updatedStats.rounds = (res.rounds);
+    //                     updatedStats.rounds.push(resData.round);
 
-                        updateStandings(`${resData.uid} - 2022`, updatedStats)
-                    }
-                })
+    //                     updateStandings(`${resData.uid} - 2022`, updatedStats)
+    //                 }
+    //             })
          
-            }
-          })
-    }
+    //         }
+    //       })
+    // }
 
+
+    
     // async function getRoundPredictions(round, userId)  {
     //     const queryParams = query((predictionCollection), where("uid", "==", userId)), where("round", "==", round);
     //     let predictionList = [];
@@ -246,6 +261,30 @@ const logout = () => {
         })
     }
 
+    async function getAllPredictions() {
+      const querySnapshot = await getDocs(predictionCollection);
+      let predictionList = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        predictionList.push(doc.data());
+      })
+      // console.log(predictionList)
+      return predictionList;
+    }
+
+
+
+    async function getStandings() {
+      const querySnapshot = await getDocs((standingsCollection));
+      let standingsArray = [];
+      querySnapshot.forEach(doc => {
+        let resData = doc.data();
+        standingsArray.push(resData)
+        });
+        return standingsArray;
+
+    }
+
 
 
     // const getResults = async (round) => {
@@ -273,5 +312,8 @@ export {
   getUserPredictions,
   updatePredictionResults,
   getStandings,
-  getAllStandings
+  getAllStandings,
+  getAllUserPredictions,
+  getAllPredictions,
+  updateStandings
 };

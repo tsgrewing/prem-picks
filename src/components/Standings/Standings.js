@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "./Standings.css";
-import { auth, db, logout, getStandings, getAllStandings } from "../../firebase";
+import { auth, db, logout, getStandings, getAllStandings, updateStandings, getAllPredictions } from "../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 
 function Dashboard() {
@@ -12,15 +12,15 @@ function Dashboard() {
   const navigate = useNavigate();
   const [standings, setStandings] = useState([]);
 
-async function updateStandingsTable () {
-  getStandings()
-  .then(() => {
-    getAllStandings()
-    .then(res => {
-      setStandings(res);
-    })
-  })
-}
+// async function updateStandingsTable () {
+//   getStandings()
+//   .then(() => {
+//     getAllStandings()
+//     .then(res => {
+//       setStandings(res);
+//     })
+//   })
+// }
 
   const fetchUserName = async () => {
     try {
@@ -38,10 +38,38 @@ async function updateStandingsTable () {
     }
   };
 
+  async function compileScores() {
+    let currentStandings = [];
+    const predictionArray = await getAllPredictions();
+    const standingsArray = await getStandings();
+    standingsArray.forEach(player => {
+        let updatedStats = player;
+        let userPredictions = predictionArray.filter(obj => {
+            return obj.uid === player.userId
+        })
+        userPredictions.forEach(pred => {
+            if ((!player.rounds || player.rounds.indexOf(pred.round) === -1) && pred.results) {
+                updatedStats.exactos = pred.results.exactos + updatedStats.exactos;
+                updatedStats.correct = pred.results.correct + updatedStats.correct;
+                updatedStats.incorrect = pred.results.incorrect + updatedStats.incorrect;
+                updatedStats.score = pred.results.roundScore + updatedStats.score;
+                updatedStats.rounds.push(pred.round);
+                // updateStandings(`${resData.uid} - 2022`, updatedStats)
+            }
+
+        })
+        console.log (updatedStats)
+        updateStandings(updatedStats)
+        currentStandings.push(updatedStats)
+    })
+    setStandings(currentStandings.sort((a, b) => (Number(a.score) > Number(b.score) ? -1 : 1)));
+    // console.log(standingsArray)
+  }
+
   useEffect(() => {
     if (loading) return;
     if (!user) return navigate("/");
-    updateStandingsTable()
+    compileScores()
     fetchUserName();
   }, [user, loading]);
 
