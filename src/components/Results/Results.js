@@ -914,7 +914,7 @@ function Results() {
       </select>
     </div>
       {isReady() &&
-      <div className="px-2.5 w-full">
+      <div className="px-2.5 w-full overflow-x-scroll">
       <table className="text-sm w-full border-separate border border-slate-500 text-left text-gray-500 " id="resultTable">
         <thead className="text-xs text-gray-700 uppercase bg-gray-100">
           <tr className=" ">

@@ -81,7 +81,10 @@ function Matches() {
 
     axios(config)
       .then((response) => {
-        const matchArray = (response.data.response);
+        let matchArray = ((response.data.response).sort(function(a,b){
+          // Turn date strings into dates, and then sort on them
+          return new Date(a.fixture.date) - new Date(b.fixture.date);
+        }));
         setMatches(matchArray);
         for(let i=0; i <matchArray.length; i++){
           if(matchArray[i].fixture.status.short === "NS"){
@@ -274,15 +277,15 @@ function Matches() {
         </select>
       </div>
       {matchList.map(match =>
-        <div key={match.fixture.id + "Row"} className='flex justify-content-center flex-wrap h-20'>
+        <div key={match.fixture.id + "Row"} className='flex justify-content-center flex-wrap h-20 grid-rows-2'>
 
-          <div className='w-1/3 p-2 flex justify-center items-center' id={match.fixture.id + "-home"} >
+          <div className='w-1/3 p-2 flex justify-center items-center row-span-2' id={match.fixture.id + "-home"} >
             <img className="text-center object-scale-down inline" alt="club crest" src={match.teams.home.logo} />
             <p className="sm:text-2xl text-center">  {match.teams.home.name}</p>
           </div>
 
          {(match.fixture.status.short === "NS") ?
-          <div className='w-1/3 p-2 flex justify-center items-center' id={match.fixture.id}>
+          <div className='w-1/3 p-2 flex justify-center items-center row-span-1' id={match.fixture.id}>
             <input data-teamname={match.teams.home.name} name="home" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl text-center leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="number" />
             <div className="flex w-8 h-px bg-gray-400 mx-5"></div>
             <input data-teamname={match.teams.away.name} name="away" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl text-center leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"}  onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="number" />
@@ -291,23 +294,18 @@ function Matches() {
         : match.fixture.status.short ==="PST" ?
 
 
-          <div className='w-1/3 p-2 flex justify-center items-center'>
+          <div className='w-1/3 p-2 flex justify-center items-center row-span-1'>
             <p className="sm:text-2xl content-center">Postponed</p>
           </div>
 
         :
-          <div className='w-1/3 p-2 flex justify-center items-center'>
+          <div className='w-1/3 p-2 flex justify-center items-center row-span-1'>
             <p className="sm:text-2xl">{match.goals.home} - {match.goals.away}</p>
-            {/* {(predictions.length > 0) &&
-            
-            <div>
 
-            </div>
-            } */}
           </div>
         }
 
-        <div className='w-1/3 p-2 flex justify-center items-center' id={match.fixture.id + "-away"}>
+        <div className='w-1/3 p-2 flex justify-center items-center row-span-2' id={match.fixture.id + "-away"}>
           <p className="inline sm:text-2xl">{match.teams.away.name}  </p>
           <img className="object-scale-down inline" alt="club crest" src={match.teams.away.logo} />
         </div>
