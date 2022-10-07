@@ -17,6 +17,7 @@ function Matches() {
   const [week, setWeek] = useState([]);
   const [predictionsList, setPredictions] = useState({});
   const [submit, setSubmit] = useState({});
+  const [showModal, setShowModal] = useState(false);
   
   let predictions =[];
   const fetchUserName = async () => {
@@ -145,7 +146,15 @@ function Matches() {
   // Save predictions and push to database
 
   function savePredictions(){
-    const docId = `${week} - ${id}` 
+    const docId = `${week} - ${id}`;
+    // const inputs = document.querySelectorAll("input[type=number]");
+    // for (let i = 0; i < inputs.length; i++) {
+    //   text += cars[i] + "<br>";
+    // }
+    document.querySelectorAll("input[type=number]").forEach(i => i.value = null)
+    if (predictions === []){
+      predictions = predictionsList;
+    } 
     const predictionDoc = {
         round: week,
         user: name,
@@ -153,8 +162,8 @@ function Matches() {
         predictions: predictions
     };
     setPredictions(predictions);
-    sendUserPredictions(docId, predictionDoc)
-    
+    sendUserPredictions(docId, predictionDoc);
+    setShowModal(true);
     // console.log(predictionsList);
   }
   
@@ -174,7 +183,49 @@ function Matches() {
     getCurrentRound();
   }, []);
 
-
+  // Show the submit button if predictions are possible.
+  const Modal = () => {
+    return (
+      <>
+            <div className="flex mt-5 content-center justify-center">
+            <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" data-modal-toggle="defaultModal" onClick={savePredictions}>
+                Submit
+            </button>
+            </div>
+          {showModal ? (
+          <>
+            <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+              <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                  <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
+                    <h3 className="text-3xl">Great Success!</h3>
+                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full"
+                      
+                      onClick={() => setShowModal(false)}
+                    >
+                        <p>X</p>
+                    </button>
+                  </div>
+                  <div className="relative p-6 flex-auto">
+                    <p>Your picks have been submitted!</p>
+                  </div>
+                  <div className="flex mt-5 content-center justify-center">
+                    <button
+                      className="text-red-500 background-transparent font-bold uppercase px-auto py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                      type="button"
+                      onClick={() => setShowModal(false)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : null}
+      </>
+    );
+  };
 
 
     return (
@@ -266,11 +317,7 @@ function Matches() {
                   
             {/* Button */}
             {submit &&
-            <div className="flex mt-5 content-center justify-center">
-            <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={savePredictions}>
-                Submit
-            </button>
-            </div>
+            <Modal />
             }
 
       </>
