@@ -814,7 +814,11 @@ function Results() {
 
     axios(config)
       .then((response) => {
-        setMatches(response.data.response);
+        let matchArray = ((response.data.response).sort(function(a,b){
+          // Turn date strings into dates, and then sort on them
+          return new Date(a.fixture.date) - new Date(b.fixture.date);
+        }));
+        setMatches(matchArray);
       })
       .catch((error) => {
         console.log(error);
