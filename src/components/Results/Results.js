@@ -718,27 +718,28 @@ function Results() {
     }
   };
 
-  // const getCurrentRound = async () => {
-  //   const config ={
-  //     method: 'get',
-  //     url: "https://v3.football.api-sports.io/fixtures/rounds?season=2022&league=39",
-  //     params: {league: "39", season:"2022", current: "true"},
-  //     headers: {
-  //       'x-rapidapi-key': rapidKey, 
-  //       'x-rapidapi-host': 'v3.football.api-sports.io'
-  //     }
-  //   };
-  //     axios(config)
-  //   .then(response => {
-  //     let week = response.data.response[0];
-  //     setWeek(week);
-  //     console.log(week)
-  //     resultTable(week)
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //   });
-  // };
+  const getCurrentRound = async () => {
+    console.log("getting round");
+    const config ={
+      method: 'get',
+      url: "https://v3.football.api-sports.io/fixtures/rounds?season=2022&league=39",
+      params: {league: "39", season:"2022", current: "true"},
+      headers: {
+        'x-rapidapi-key': rapidKey, 
+        'x-rapidapi-host': 'v3.football.api-sports.io'
+      }
+    };
+      axios(config)
+    .then(response => {
+      let week = response.data.response[0];
+      setWeek(week);
+      console.log(week)
+      resultTable(week)
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  };
 
   async function scorePredictions() {
   
@@ -861,17 +862,18 @@ function Results() {
   }
 
 
-  // useEffect(() => {
-  //   getCurrentRound();
-  // }, []);
-
+  
   useEffect(() => {
     if (loading) return;
     if (!user) return navigate("/");
-
+    
     fetchUserName();
   }, [user, loading]);
-
+  
+  useEffect(() => {
+    getCurrentRound();
+  }, []);
+  
   return (
     <>
     <div className="ml-auto mr-auto relative w-64">

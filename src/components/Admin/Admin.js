@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "./Admin.css";
-import { auth, db, getAllPredictions, getStandings, logout, sendUserPredictions, updateStandings } from "../../firebase";
+import { auth, db, getAllPredictions, getUserPredictions, getStandings, logout, sendUserPredictions, updateStandings } from "../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import axios from "axios";
 import {rapidKey} from "../../config.js"
+import ReactTooltip from 'react-tooltip';
 
 
 function Admin() {
@@ -17,7 +18,7 @@ function Admin() {
   const [week, setWeek] = useState([]);
 //   const [matchList, setMatchList] = useState([]);
 
-  
+
     let predictions = [];
 
     const matchList = [
@@ -757,7 +758,16 @@ function Admin() {
     setWeek(`Regular Season - ${week}`);
   }
 
-
+  async function getPredictions(matchWeek) {
+    getUserPredictions(id, 'Regular Season - 5')
+    .then(res => {
+      if(res.length > 0) {
+     setPredictions(res[0].predictions)
+     console.log(res)
+      }
+    })
+   
+  }
 //   Update prediction on input change
 
   function updatePrediction (matchId, side, score, teamName) {
@@ -881,20 +891,48 @@ function Admin() {
         </select>
       </div>
       {matchList.map(match =>
-        <div key={match.fixture.id + "Row"} className='flex justify-content-center flex-wrap h-20'>
 
-          <div className='w-1/3 p-2 flex justify-center items-center' id={match.fixture.id + "-home"} >
+        <div data-tip data-for={match.fixture.id + "tip"} key={match.fixture.id + "Row"} className='flex justify-content-center flex-wrap h-20'>
+            <ReactTooltip id={match.fixture.id + "tip"} place="top" effect="solid" >
+                <ul>
+                    <li>Venue: {match.fixture.venue.name}</li>
+                    <li>Date: {new Date(match.fixture.date).toLocaleString()}</li>
+                    <li>Referee: {match.fixture.referee}</li>
+                </ul>
+            </ReactTooltip>
+            <div className='w-1/3 p-2 flex justify-center items-center' id={match.fixture.id + "-home"} >
             <img className="text-center object-scale-down inline" alt="club crest" src={match.teams.home.logo} />
             <p className="sm:text-2xl text-center">  {match.teams.home.name}</p>
-          </div>
+            </div>
 {/* 
          {(match.fixture.status.short === "NS") ? */}
           <div className='w-1/3 p-2 flex justify-center items-center' id={match.fixture.id}>
+          {predictionsList.map(doc => {
+            console.log(doc)
+                const matchObj = doc.find(obj => {
+                  return obj.id === match.fixture.id
+                })
+                if (matchObj) {
+                return (
+                    <p className="inline appearance-none block w-10 bg-yellow-200 text-gray-700 border border-black rounded mx-4 py-2 px-2 text-2xl text-center leading-tight focus:outline-none focus:bg-white focus:border-gray-500">{matchObj.home.score}</p>
+                    )}
+                else {return <></>}
+              } 
+              )}
+
             <input data-teamname={match.teams.home.name} name="home" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl text-center leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "homeScore"} onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="number" />
             <div className="flex w-8 h-px bg-gray-400 mx-5"></div>
             <input data-teamname={match.teams.away.name} name="away" className="inline appearance-none block w-10 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-2 text-2xl text-center leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id={match.fixture.id + "awayScore"}  onChange={event => updatePrediction(match.fixture.id, event.target.name, event.target.value, event.target.getAttribute("data-teamname"))} type="number" />
-          <p className="flex flex-col">hello</p>
-          </div>
+            {predictionsList.map(doc => {
+                const matchObj = doc.predictionsList.find(obj => {
+                  return obj.id === match.fixture.id
+                })
+                if (matchObj) {
+                return (
+                    <p className="inline appearance-none block w-10 bg-yellow-200 text-gray-700 border border-black rounded mx-4 py-2 px-2 text-2xl text-center leading-tight focus:outline-none focus:bg-white focus:border-gray-500">{matchObj.away.score}</p>
+                    )}
+              } 
+              )}          </div>
         
       {  // : match.fixture.status.short ==="PST" ?
 
@@ -920,7 +958,7 @@ function Admin() {
             
             {/* Button */}
             <div className="flex mt-5 content-center justify-center">
-            <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={savePredictions}>
+            <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={getPredictions}>
                 Submit
             </button>
             </div>

@@ -7,6 +7,8 @@ import { logout } from "../../firebase";
 import ReactDOM from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import trophy from './trophy.png';
+
 
 
 function Nav() {
@@ -20,12 +22,12 @@ function Nav() {
               <div className="flex-shrink-0">
                 <img
                   className="h-8 w-8"
-                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                  src={trophy}
                   alt="Workflow"
                 />
               </div>
               <div className="hidden md:block">
-                <div className="ml-10 flex items-baseline space-x-4">
+                <div className="ml-5 flex items-baseline space-x-4">
                   <a
                     href="matches"
                     className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
