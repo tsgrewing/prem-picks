@@ -6,6 +6,7 @@ import { auth, db, getRoundPredictions, getUserPredictions, logout, sendUserPred
 import { query, collection, getDocs, where } from "firebase/firestore";
 import axios from "axios";
 import {rapidKey} from "../../config.js"
+import ReactTooltip from "react-tooltip";
 
 
 function Matches() {
@@ -277,8 +278,14 @@ function Matches() {
         </select>
       </div>
       {matchList.map(match =>
-        <div key={match.fixture.id + "Row"} className='flex justify-content-center flex-wrap h-20 grid-rows-2'>
-
+        <div data-tip data-for={match.fixture.id + "tip"} key={match.fixture.id + "Row"} className='flex justify-content-center flex-wrap h-20'>
+        <ReactTooltip id={match.fixture.id + "tip"} place="top" effect="solid" >
+            <ul>
+                <li>Venue: {match.fixture.venue.name}</li>
+                <li>Date: {new Date(match.fixture.date).toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})}</li>
+                <li>Referee: {match.fixture.referee}</li>
+            </ul>
+        </ReactTooltip>
           <div className='w-1/3 p-2 flex justify-center items-center row-span-2' id={match.fixture.id + "-home"} >
             <img className="text-center object-scale-down inline" alt="club crest" src={match.teams.home.logo} />
             <p className="sm:text-2xl text-center">  {match.teams.home.name}</p>

@@ -896,7 +896,7 @@ function Admin() {
             <ReactTooltip id={match.fixture.id + "tip"} place="top" effect="solid" >
                 <ul>
                     <li>Venue: {match.fixture.venue.name}</li>
-                    <li>Date: {new Date(match.fixture.date).toLocaleString()}</li>
+                    <li>Date: {new Date(match.fixture.date).toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})}</li>
                     <li>Referee: {match.fixture.referee}</li>
                 </ul>
             </ReactTooltip>
