@@ -154,6 +154,34 @@ const logout = () => {
       return predictionList;
     }
 
+    async function predictionTransaction(docId, predictions) {
+      // let queryParams = query((predictionCollection), where(firebase.firestore.FieldPath.documentId(), '==', docId));
+      let predictionList = [];
+      const existingPrediction = await db.collection('predictions').doc(docId).get();
+      if (!existingPrediction) {
+        setDoc(doc(db, 'predictions', docId), predictions)
+        .then(() => {
+            console.log("Predictions updated!")
+        })
+        .catch(err => {
+            console.log(err)
+        })
+      }
+      else{
+      predictionList = existingPrediction.predictions;
+      predictions.predictions.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        if (predictionList.indexOf(doc.id) === -1) {
+          predictionList.push(doc.data());
+        }
+        const index = 
+        predictionList.push(doc.data());
+        
+      }) 
+      console.log(predictionList)
+      } 
+    }
+
     async function getCurrentStats(userId) {
         const standingsSnapshot = await getDoc(doc(db, "standings", userId));
         try {
@@ -242,7 +270,7 @@ const logout = () => {
     // }
 
     function sendUserPredictions(docId, predictions) {
-        updateDoc(doc(db, 'predictions', docId), predictions)
+        setDoc(doc(db, 'predictions', docId), predictions)
         .then(() => {
             console.log("Predictions updated!")
         })
@@ -315,5 +343,6 @@ export {
   getAllStandings,
   getAllUserPredictions,
   getAllPredictions,
-  updateStandings
+  updateStandings,
+  predictionTransaction
 };

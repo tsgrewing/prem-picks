@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "./Admin.css";
-import { auth, db, getAllPredictions, getUserPredictions, getStandings, logout, sendUserPredictions, updateStandings } from "../../firebase";
+import { auth, db, getAllPredictions, getUserPredictions, getStandings, logout, sendUserPredictions, updateStandings, predictionTransaction } from "../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import axios from "axios";
 import {rapidKey} from "../../config.js"
@@ -841,10 +841,17 @@ function Admin() {
     // console.log(standingsArray)
   }
 
+  async function predictionUpdate() {
+    predictionTransaction(docId, prediction)
+  }
+
   return (
     <>
     <div className="w-full inline-flex items-center">
     <button type="button" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mx-auto" onClick={compileScores}>Compile Scores</button>
+</div>
+    <div className="w-full inline-flex items-center">
+    <button type="button" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mx-auto" onClick={predictionUpdate}>Test</button>
 </div>
 
     <div>
