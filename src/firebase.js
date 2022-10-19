@@ -176,7 +176,7 @@ const logout = () => {
 
     async function updateStandings (newStats) {
         const docId = `${newStats.userId} - 2022`
-        updateDoc(doc(db, 'standings', docId), newStats)
+        setDoc(doc(db, 'standings', docId), newStats)
         .then(() => {
             console.log("Stats updated!")
         })
@@ -242,7 +242,7 @@ const logout = () => {
     // }
 
     function sendUserPredictions(docId, predictions) {
-        setDoc(doc(db, 'predictions', docId), predictions)
+        updateDoc(doc(db, 'predictions', docId), predictions)
         .then(() => {
             console.log("Predictions updated!")
         })

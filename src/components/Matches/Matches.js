@@ -43,7 +43,7 @@ function Matches() {
 
   function setMatches(matchArr){
     setMatchList(matchArr);
-    console.log(matchList)
+    // console.log(matchList)
   };
 
   const getCurrentRound = async () => {
@@ -61,7 +61,7 @@ function Matches() {
       let currentWeek = response.data.response[0];
       setWeek(currentWeek);
       getMatches(currentWeek);
-      getUserPredictions(currentWeek);
+      getPredictions(currentWeek);
     })
     .catch(err => {
       console.log(err);
@@ -69,7 +69,7 @@ function Matches() {
   };
 
   function getMatches(chosenWeek) {
-
+    getPredictions(chosenWeek);
     const config = {
       method: 'get',
       url: "https://v3.football.api-sports.io/fixtures",
@@ -89,7 +89,7 @@ function Matches() {
         setMatches(matchArray);
         for(let i=0; i <matchArray.length; i++){
           if(matchArray[i].fixture.status.short === "NS"){
-            console.log(matchArray[i].fixture.status.short)
+            // console.log(matchArray[i].fixture.status.short)
             setSubmit(true);
             break;
           }
@@ -110,17 +110,19 @@ function Matches() {
   };
 
   async function getPredictions(matchWeek) {
+    console.log(matchWeek)
     getUserPredictions(id, matchWeek)
     .then(res => {
       if(res.length > 0) {
      setPredictions(res[0].predictions)
-     console.log(res)
+     console.log(predictionsList)
       }
     })
    
   }
 
   function updatePrediction (matchId, side, score, teamName) {
+    console.log(predictionsList)
     let matchExists = predictions.find((match, i) => {
         if (match.id === matchId && side === "away") {
             predictions[i].away.score = score;
@@ -151,11 +153,10 @@ function Matches() {
 
   function savePredictions(){
     const docId = `${week} - ${id}`;
-    // const inputs = document.querySelectorAll("input[type=number]");
-    // for (let i = 0; i < inputs.length; i++) {
-    //   text += cars[i] + "<br>";
-    // }
+
+    // Clear inputs on submit
     document.querySelectorAll("input[type=number]").forEach(i => i.value = null)
+
     if (predictions === []){
       predictions = predictionsList;
     } 
@@ -172,6 +173,7 @@ function Matches() {
   }
   
   async function updateMatches (matchWeek){
+    
     getMatches(matchWeek);
     getPredictions(matchWeek);
   }
