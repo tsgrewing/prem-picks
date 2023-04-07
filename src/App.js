@@ -17,6 +17,8 @@ import Standings from "./components/Standings/Standings"
 function App() {
   const [user, loading, error] = useAuthState(auth);
 
+  
+
   return (
     <>
     {user && <Nav /> }

@@ -61,7 +61,7 @@ function Matches() {
       let currentWeek = response.data.response[0];
       setWeek(currentWeek);
       getMatches(currentWeek);
-      getPredictions(currentWeek);
+      // getPredictions(currentWeek);
     })
     .catch(err => {
       console.log(err);
@@ -96,29 +96,25 @@ function Matches() {
           else {
             setSubmit(false);
           }
-
         }
-        
       })
       .catch((error) => {
         console.log(error);
       });
 
-
-
     setWeek(chosenWeek);
   };
 
-  async function getPredictions(matchWeek) {
-    console.log(matchWeek)
+  const getPredictions = async(matchWeek) => {
+    console.log(`Getting predictions for ${id}`)
     getUserPredictions(id, matchWeek)
     .then(res => {
+      console.log(res)
       if(res.length > 0) {
      setPredictions(res[0].predictions)
-     console.log(predictionsList)
+     console.log("success")
       }
     })
-   
   }
 
   function updatePrediction (matchId, side, score, teamName) {
@@ -175,7 +171,12 @@ function Matches() {
   async function updateMatches (matchWeek){
     
     getMatches(matchWeek);
-    getPredictions(matchWeek);
+    // getPredictions(matchWeek);
+  };
+
+  function printPreds(){
+    console.log(predictionsList)
+
   }
 
   useEffect(() => {
@@ -185,9 +186,9 @@ function Matches() {
     fetchUserName();
   }, [user, loading]);
 
-  useEffect(() => {
-    getCurrentRound();
-  }, []);
+  // useEffect(() => {
+  //   getCurrentRound();
+  // }, []);
 
   // Show the submit button if predictions are possible.
   const Modal = () => {
@@ -278,6 +279,9 @@ function Matches() {
           <option value="37">Match Week 37</option>
           <option value="38">Match Week 38</option>
         </select>
+        <button onClick={() => printPreds()}>
+          Predictions?
+        </button>
       </div>
       {matchList.map(match =>
         <div data-tip data-for={match.fixture.id + "tip"} key={match.fixture.id + "Row"} className='flex justify-content-center flex-wrap h-20'>

@@ -135,6 +135,7 @@ const logout = () => {
     async function getUserPredictions(userId, round)  {
         let queryParams = query((predictionCollection), where("uid", "==", userId), (where("round", "==", round)));
         let predictionList = [];
+        console.log(`getting preds for ${userId}`)
         const querySnapshot = await getDocs(queryParams);
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots

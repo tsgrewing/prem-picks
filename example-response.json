@@ -1,0 +1,119 @@
+[
+    {
+        "id": 868056,
+        "colors": "bg-lime-100",
+        "result": "correct",
+        "home": {
+            "score": "1",
+            "name": "Bournemouth"
+        },
+        "away": {
+            "score": "1",
+            "name": "Southampton"
+        }
+    },
+    {
+        "colors": "bg-red-200",
+        "away": {
+            "name": "Chelsea",
+            "score": "2"
+        },
+        "result": "incorrect",
+        "id": 868058,
+        "home": {
+            "name": "Brentford",
+            "score": "0"
+        }
+    },
+    {
+        "id": 868059,
+        "colors": "bg-red-200",
+        "result": "incorrect",
+        "away": {
+            "name": "Nottingham Forest",
+            "score": "0"
+        },
+        "home": {
+            "name": "Brighton",
+            "score": "1"
+        }
+    },
+    {
+        "away": {
+            "score": "1",
+            "name": "Aston Villa"
+        },
+        "home": {
+            "score": "2",
+            "name": "Fulham"
+        },
+        "colors": "bg-red-200",
+        "result": "incorrect",
+        "id": 868060
+    },
+    {
+        "result": "correct",
+        "home": {
+            "score": "2",
+            "name": "Leicester"
+        },
+        "away": {
+            "name": "Leeds",
+            "score": "2"
+        },
+        "id": 868061,
+        "colors": "bg-lime-100"
+    },
+    {
+        "away": {
+            "score": "1",
+            "name": "Wolves"
+        },
+        "colors": "bg-red-200",
+        "result": "incorrect",
+        "home": {
+            "name": "Crystal Palace",
+            "score": "3"
+        },
+        "id": 868062
+    },
+    {
+        "result": "incorrect",
+        "id": 868063,
+        "away": {
+            "score": "0",
+            "name": "Everton"
+        },
+        "home": {
+            "name": "Newcastle",
+            "score": "2"
+        },
+        "colors": "bg-red-200"
+    },
+    {
+        "id": 868064,
+        "colors": "bg-red-200",
+        "result": "incorrect",
+        "home": {
+            "score": "2",
+            "name": "Liverpool"
+        },
+        "away": {
+            "score": "1",
+            "name": "West Ham"
+        }
+    },
+    {
+        "colors": "bg-red-200",
+        "away": {
+            "score": "2",
+            "name": "Tottenham"
+        },
+        "home": {
+            "name": "Manchester United",
+            "score": "1"
+        },
+        "id": 868065,
+        "result": "incorrect"
+    }
+]
