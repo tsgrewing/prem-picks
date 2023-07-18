@@ -80,9 +80,10 @@ const registerWithEmailAndPassword = async (name, email, password) => {
       authProvider: "local",
       email,
     });
+    
     // await addDoc(collection(db, 'standings2023'), {
     //   userId: user.uid,
-    //   name, 
+    //   name, ~
     //   rounds: [],
     //   score: 0,
     //   correct: 0,
