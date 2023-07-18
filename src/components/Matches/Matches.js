@@ -49,8 +49,8 @@ function Matches() {
   const getCurrentRound = async () => {
     const config ={
       method: 'get',
-      url: "https://v3.football.api-sports.io/fixtures/rounds?season=2022&league=39",
-      params: {league: "39", season:"2022", current: "true"},
+      url: "https://v3.football.api-sports.io/fixtures/rounds?season=2023&league=39",
+      params: {league: "39", season:"2023", current: "true"},
       headers: {
         'x-rapidapi-key': rapidKey, 
         'x-rapidapi-host': 'v3.football.api-sports.io'
@@ -73,7 +73,7 @@ function Matches() {
     const config = {
       method: 'get',
       url: "https://v3.football.api-sports.io/fixtures",
-      params: {league: 39, season: 2022, round: chosenWeek}, 
+      params: {league: 39, season: 2023, round: chosenWeek}, 
       headers: {
         'x-rapidapi-key': rapidKey, 
         'x-rapidapi-host': 'v3.football.api-sports.io'
