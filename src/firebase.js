@@ -35,8 +35,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const predictionCollection = collection(db, "predictions");
-const standingsCollection = collection(db, "standings");
+const predictionCollection = collection(db, "predictions2023");
+const standingsCollection = collection(db, "standings2023");
 // const resultsCollection = collection(db, "results");
 
 const googleProvider = new GoogleAuthProvider();
@@ -80,6 +80,14 @@ const registerWithEmailAndPassword = async (name, email, password) => {
       authProvider: "local",
       email,
     });
+    // await addDoc(collection(db, 'standings2023'), {
+    //   userId: user.uid,
+    //   name, 
+    //   rounds: [],
+    //   score: 0,
+    //   correct: 0,
+    //   incorrect: 0
+    // })
   } catch (err) {
     console.error(err);
     alert(err.message);
@@ -158,9 +166,9 @@ const logout = () => {
     async function predictionTransaction(docId, predictions) {
       // let queryParams = query((predictionCollection), where(firebase.firestore.FieldPath.documentId(), '==', docId));
       let predictionList = [];
-      const existingPrediction = await db.collection('predictions').doc(docId).get();
+      const existingPrediction = await db.collection('predictions2023').doc(docId).get();
       if (!existingPrediction) {
-        setDoc(doc(db, 'predictions', docId), predictions)
+        setDoc(doc(db, 'predictions2023', docId), predictions)
         .then(() => {
             console.log("Predictions updated!")
         })
@@ -184,7 +192,7 @@ const logout = () => {
     }
 
     async function getCurrentStats(userId) {
-        const standingsSnapshot = await getDoc(doc(db, "standings", userId));
+        const standingsSnapshot = await getDoc(doc(db, "standings2023", userId));
         try {
             // standingsSnapshot.data();
             return standingsSnapshot.data();
@@ -204,8 +212,9 @@ const logout = () => {
     };
 
     async function updateStandings (newStats) {
-        const docId = `${newStats.userId} - 2022`
-        setDoc(doc(db, 'standings', docId), newStats)
+      console.log(newStats)
+        const docId = `${newStats.userId} - 2023`
+        setDoc(doc(db, 'standings2023', docId), newStats)
         .then(() => {
             console.log("Stats updated!")
         })
@@ -271,7 +280,7 @@ const logout = () => {
     // }
 
     function sendUserPredictions(docId, predictions) {
-        setDoc(doc(db, 'predictions', docId), predictions)
+        setDoc(doc(db, 'predictions2023', docId), predictions)
         .then(() => {
             console.log("Predictions updated!")
         })
@@ -281,7 +290,7 @@ const logout = () => {
     };
 
     function updatePredictionResults(docId, obj) {
-        updateDoc(doc(db, 'predictions', docId), obj)
+        updateDoc(doc(db, 'predictions2023', docId), obj)
         .then(() => {
             console.log("Predictions updated!")
         })

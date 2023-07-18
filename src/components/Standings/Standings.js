@@ -43,6 +43,7 @@ function Dashboard() {
     const predictionArray = await getAllPredictions();
     const standingsArray = await getStandings();
     standingsArray.forEach(player => {
+      console.log(player)
         let updatedStats = player;
         let userPredictions = predictionArray.filter(obj => {
             return obj.uid === player.userId
@@ -58,7 +59,7 @@ function Dashboard() {
             }
 
         })
-        console.log (updatedStats)
+        // console.log (updatedStats)
         updateStandings(updatedStats)
         currentStandings.push(updatedStats)
     })

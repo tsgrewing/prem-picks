@@ -35,6 +35,8 @@ function Dashboard() {
     fetchUserName();
   }, [user, loading]);
 
+  function startSeason (){};
+
   return (
     <div className="dashboard">
       <div className="dashboard__container">
