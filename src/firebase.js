@@ -80,7 +80,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
       authProvider: "local",
       email,
     });
-    
+
     // await addDoc(collection(db, 'standings2023'), {
     //   userId: user.uid,
     //   name, ~
@@ -311,8 +311,6 @@ const logout = () => {
       return predictionList;
     }
 
-
-
     async function getStandings() {
       const querySnapshot = await getDocs((standingsCollection));
       let standingsArray = [];
@@ -324,18 +322,16 @@ const logout = () => {
 
     }
 
-
-
-    // const getResults = async (round) => {
-    //     const queryParams = query((predictionCollection), (where("round", "==", round)));
-    //     let predictionList = [];
-    //     const querySnapshot = await getDocs(queryParams);
-    //     querySnapshot.forEach((doc) => {
-    //       // doc.data() is never undefined for query doc snapshots
-    //       predictionList.push(doc.data());
-    //     })
-    //     return predictionList;
-    // }
+// const getResults = async (round) => {
+//     const queryParams = query((predictionCollection), (where("round", "==", round)));
+//     let predictionList = [];
+//     const querySnapshot = await getDocs(queryParams);
+//     querySnapshot.forEach((doc) => {
+//       // doc.data() is never undefined for query doc snapshots
+//       predictionList.push(doc.data());
+//     })
+//     return predictionList;
+// }
 
 
 export {

@@ -3,8 +3,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import { auth, db, logout } from "../../firebase";
-import { query, collection, getDocs, where } from "firebase/firestore";
-import Nav from "../Nav/Nav";
+import { query, collection, getDocs, setDoc, addDoc, where, doc } from "firebase/firestore";
+
+const userCollection = collection(db, "users");
+const standingsCollection = collection(db, "standings2023");
 
 function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
@@ -35,16 +37,40 @@ function Dashboard() {
     fetchUserName();
   }, [user, loading]);
 
-  function startSeason (){};
+  async function startSeason (){
+    const querySnapshot = await getDocs(userCollection);
+    // const standingsSnapshot = await getDocs(standingsCollection);
+    // standingsSnapshot.forEach(doc => {
+    //   console.log(doc.data());
+
+    // })
+    // let predictionList = [];
+    querySnapshot.forEach((user) => {
+      console.log(user.data())
+      const docId = `${user.data().uid} - 2023`;
+      const docData = {
+        rounds: [],
+        score: 0,
+        name: user.data().name,
+        userId: user.data().uid,
+        correct: 0, 
+        incorrect: 0,
+        exactos: 0
+      };
+      setDoc(doc(db, 'standings2023', docId), docData) 
+    // console.log(predictionList)
+    // return predictionList;
+    });
+  };
 
   return (
     <div className="dashboard">
       <div className="dashboard__container">
-        Logged in as
+        {/* Logged in as
         <div>{name}</div>
-        <div>{user?.email}</div>
-        <button className="dashboard__btn" onClick={logout}>
-          Logout
+        <div>{user?.email}</div> */}
+        <button className="dashboard__btn" onClick={startSeason}>
+          Start New Season
         </button>
       </div>
     </div>
