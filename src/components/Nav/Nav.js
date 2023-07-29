@@ -1,21 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
-
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../firebase";
 import ReactDOM from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import trophy from './trophy.png';
+import { query, collection, getDocs, where } from "firebase/firestore";
+import { auth, db, logout} from "../../firebase";
 
 
 
 function Nav() {
+  const [user, loading] = useAuthState(auth);
+  const [name, setName] = useState("");
+  const [id, setId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  const fetchUserName = async () => {
+    try {
+      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+      const doc = await getDocs(q);
+      const data = doc.docs[0].data();
+
+      setId(data.uid);
+
+      setName(data.name);
+      
+    } catch (err) {
+      console.error(err);
+      alert("An error occured while fetching user data");
+    }
+  };
+
+  useEffect(() => {
+    if (loading) return;
+
+    fetchUserName();
+  }, [user, loading]);
+  
   return (
     <div>
-      <nav className="bg-gray-800 mb-5">
+      <nav className="bg-gray-700 dark:bg-gray-900 mb-5">
         <div className="w-screen px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
@@ -60,12 +86,19 @@ function Nav() {
                 </div>
               </div>
             </div>
+            <div className="hidden md:block justify-self-end text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" value="" className="sr-only peer" />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                <span className="ml-3 text-sm font-medium">Dark Mode</span>
+              </label>
+            </div>
             <button
-                    onClick={logout}
-                    className="hidden md:block justify-self-end text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Logout
-                  </button>
+              onClick={logout}
+              className="hidden md:block justify-self-end text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Logout
+            </button>
             <div className="-mr-2 flex md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -154,14 +187,14 @@ function Nav() {
                 </a> */}
                 <button
                     onClick={logout}
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                   >
                     Logout
                   </button>
 
-              <div className="justify-content-right align-content-right">
-                <FontAwesomeIcon icon="faRightFromBracket" />
-                </div>
+              {/* <div className="justify-content-right align-content-right">
+                <FontAwesomeIcon icon={faRightFromBracket} />
+                </div> */}
             </div>
               </div>
           )}

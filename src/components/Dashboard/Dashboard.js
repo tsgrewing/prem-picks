@@ -3,6 +3,9 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import { auth, db, logout } from "../../firebase";
+import {rapidKey} from "../../config.js"
+import axios from "axios";
+
 import { query, collection, getDocs, setDoc, addDoc, where, doc } from "firebase/firestore";
 
 const userCollection = collection(db, "users");
@@ -63,6 +66,27 @@ function Dashboard() {
     });
   };
 
+  async function getRounds (comp) {
+    const config = {
+      method: 'get',
+      url: "https://v3.football.api-sports.io/fixtures/rounds",
+      params: {league: comp, season: 2023}, 
+      headers: {
+        'x-rapidapi-key': rapidKey, 
+        'x-rapidapi-host': 'v3.football.api-sports.io'
+      }
+    };
+
+      axios(config)
+      .then((response) => {
+        let res = ((response.data));
+         console.log(res)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   return (
     <div className="dashboard">
       <div className="dashboard__container">
@@ -72,6 +96,13 @@ function Dashboard() {
         <button className="dashboard__btn" onClick={startSeason}>
           Start New Season
         </button>
+        <select className="dashboard__btn" defaultValue={"default"} onChange={event => getRounds(event.target.value)}>
+          <option value={"default"} disabled>Get Round List</option>
+          <option value="39">English Premier League</option>
+          <option value="2">UEFA Champions League</option>
+          <option value="3">UEFA Europa League</option>
+        </select>
+
       </div>
     </div>
   );
