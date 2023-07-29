@@ -16,7 +16,7 @@ function Nav() {
   return (
     <div>
       <nav className="bg-gray-800 mb-5">
-        <div className="max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="w-screen px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -56,15 +56,16 @@ function Nav() {
                     Profile
                   </a> */}
 
-                  <button
-                    onClick={logout}
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Logout
-                  </button>
+                  
                 </div>
               </div>
             </div>
+            <button
+                    onClick={logout}
+                    className="hidden md:block justify-self-end text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Logout
+                  </button>
             <div className="-mr-2 flex md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
