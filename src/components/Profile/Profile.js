@@ -101,15 +101,7 @@ function Profile() {
 
   return (
     <div className="profile">
-        {/* <button onClick={getUserPicks}>Score Predictions</button> */}
-        {/* {(predictions.length > 0) &&
-          <div>
-            {predictions.map(doc => 
-            <p key={doc.id}> {doc.home.name} {doc.home.score} - {doc.away.score} {doc.away.name}</p>
-            ) 
-          }
-          </div>
-        } */}
+        
     </div>
   );
 }

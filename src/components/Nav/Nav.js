@@ -33,6 +33,10 @@ function Nav() {
     }
   };
 
+  const handleToggle  = (e) => {
+    
+  }
+
   useEffect(() => {
     if (loading) return;
 
@@ -81,24 +85,24 @@ function Nav() {
                   >
                     Profile
                   </a> */}
+                  <button
+                    onClick={logout}
+                    className="hidden md:block justify-self-end text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Logout
+                  </button>
 
                   
                 </div>
               </div>
             </div>
-            <div className="hidden md:block justify-self-end text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+            {/* <div className="hidden md:block justify-self-end text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
               <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" value="" className="sr-only peer" />
+                <input type="checkbox" onChange={handleToggle} value="" className="sr-only peer" />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                 <span className="ml-3 text-sm font-medium">Dark Mode</span>
               </label>
-            </div>
-            <button
-              onClick={logout}
-              className="hidden md:block justify-self-end text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Logout
-            </button>
+            </div> */}
             <div className="-mr-2 flex md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -190,7 +194,15 @@ function Nav() {
                     className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                   >
                     Logout
-                  </button>
+                </button>
+                
+                {/* <div className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" value="" className="sr-only peer" />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    <span className="ml-3 text-base font-medium">Dark Mode</span>
+                  </label>
+                </div> */}
 
               {/* <div className="justify-content-right align-content-right">
                 <FontAwesomeIcon icon={faRightFromBracket} />
