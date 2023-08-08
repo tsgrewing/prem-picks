@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-// import { useNavigate } from "react-router-dom";
-// import ReactDOM from 'react-dom'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { useNavigate } from "react-router-dom";
+import ReactDOM from 'react-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import trophy from './trophy.png';
 import { query, collection, getDocs, where } from "firebase/firestore";
 import { auth, db, logout} from "../../firebase";
@@ -13,8 +13,8 @@ import { auth, db, logout} from "../../firebase";
 
 function Nav() {
   const [user, loading] = useAuthState(auth);
-  const [setName] = useState("");
-  const [setId] = useState("");
+  const [name, setName] = useState("");
+  const [id, setId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   const fetchUserName = async () => {
@@ -33,9 +33,15 @@ function Nav() {
     }
   };
 
+<<<<<<< HEAD
   // const handleToggle  = (e) => {
     
   // }
+=======
+  const handleToggle  = (e) => {
+    
+  }
+>>>>>>> 4156c420c89ce0632ad70d76339ff138e39da5db
 
   useEffect(() => {
     if (loading) return;
