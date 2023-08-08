@@ -33,15 +33,9 @@ function Nav() {
     }
   };
 
-<<<<<<< HEAD
-  // const handleToggle  = (e) => {
-    
-  // }
-=======
   const handleToggle  = (e) => {
     
   }
->>>>>>> 4156c420c89ce0632ad70d76339ff138e39da5db
 
   useEffect(() => {
     if (loading) return;
