@@ -90,10 +90,10 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <div className="dashboard__container">
-        {/* Logged in as
+        Logged in as
         <div>{name}</div>
-        <div>{user?.email}</div> */}
-        <button className="dashboard__btn" onClick={startSeason}>
+        <div>{user?.email}</div>
+        {/* <button className="dashboard__btn" onClick={startSeason}>
           Start New Season
         </button>
         <select className="dashboard__btn" defaultValue={"default"} onChange={event => getRounds(event.target.value)}>
@@ -101,7 +101,7 @@ function Dashboard() {
           <option value="39">English Premier League</option>
           <option value="2">UEFA Champions League</option>
           <option value="3">UEFA Europa League</option>
-        </select>
+        </select> */}
 
       </div>
     </div>
