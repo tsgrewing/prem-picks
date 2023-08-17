@@ -50,9 +50,9 @@ function Dashboard() {
         })
         userPredictions.forEach(pred => {
           // console.log(player.rounds)
-          let round = player.rounds.find(x => x.round == [pred.round])
+          let round = player.rounds.findIndex(x => x.round == [pred.round])
           console.log(round)
-          if (!round && pred.results) {
+          if (round == -1 && pred.results) {
             let roundName = pred.round;
             let roundResults = pred.results
             
@@ -65,14 +65,15 @@ function Dashboard() {
               // updateStandings(`${resData.uid} - 2022`, updatedStats)
           }
 
-          else if (round !== pred.results) {
-            // console.log (pred.results)
-            let oldResults = round;
+          else if (player.rounds[round] !== pred.results) {
+            console.log (pred.results)
+            let oldResults = player.rounds[round];
             updatedStats.exactos = pred.results.exactos + updatedStats.exactos - oldResults.exactos;
             updatedStats.correct = pred.results.correct + updatedStats.correct - oldResults.correct;
             updatedStats.incorrect = pred.results.incorrect + updatedStats.incorrect -oldResults.incorrect;
             updatedStats.score = pred.results.roundScore + updatedStats.score - oldResults.roundScore;
-            updatedStats.rounds[pred.round] = pred.results;
+            updatedStats.rounds[round] = pred.results;
+            
           }
 
         })
