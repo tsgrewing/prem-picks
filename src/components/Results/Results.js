@@ -751,7 +751,8 @@ function Results() {
       exactos: 0,
       correct: 0,
       incorrect: 0,
-      roundScore: 0
+      roundScore: 0,
+      round: userPrediction.round
       };
       userPrediction.bgColor ="";
        
@@ -760,30 +761,36 @@ function Results() {
                     return obj.fixture.id === game.id
                   })
         
-        console.log(matchObj)
-        
-        if (matchObj.goals.home == game.home.score && matchObj.goals.away == game.away.score) {
-            userPrediction.results.exactos ++;
-            userPrediction.results.roundScore = userPrediction.results.roundScore+3;
-            game.result = "exacto";
-            game.colors = "bg-green-200"
-        }
-        else if ((matchObj.goals.home > matchObj.goals.away && game.home.score > game.away.score) || (matchObj.goals.home < matchObj.goals.away && game.home.score < game.away.score) || (matchObj.goals.home === matchObj.goals.away && game.home.score === game.away.score)) {
-          userPrediction.results.correct ++;
-          userPrediction.results.roundScore ++;
-          game.result = "correct";
-          game.colors = "bg-lime-100"
+        // console.log(matchObj.fixture.status.short)
 
-        }
-        else {
-          game.result = "incorrect";
-          userPrediction.results.incorrect ++;
-          game.colors = "bg-red-200"
-        }
+        if (matchObj.fixture.status.short !== "NS") {
+        console.log("Not Started")
+          if (matchObj.goals.home == game.home.score && matchObj.goals.away == game.away.score) {
+              userPrediction.results.exactos ++;
+              userPrediction.results.roundScore = userPrediction.results.roundScore+3;
+              game.result = "exacto";
+              game.colors = "bg-green-200"
+          }
+          else if ((matchObj.goals.home > matchObj.goals.away && game.home.score > game.away.score) || (matchObj.goals.home < matchObj.goals.away && game.home.score < game.away.score) || (matchObj.goals.home === matchObj.goals.away && game.home.score === game.away.score)) {
+            userPrediction.results.correct ++;
+            userPrediction.results.roundScore ++;
+            game.result = "correct";
+            game.colors = "bg-lime-100"
+
+          }
+          else {
+            game.result = "incorrect";
+            userPrediction.results.incorrect ++;
+            game.colors = "bg-red-200"
+          }
+
+        } 
         
       })
+
       predictionArray.push(userPrediction) 
       // setPredictions(predictionArray)
+    
     })
   
     predictionArray.forEach(doc => {

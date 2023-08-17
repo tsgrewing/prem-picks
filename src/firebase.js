@@ -213,7 +213,7 @@ const logout = () => {
     };
 
     async function updateStandings (newStats) {
-      console.log(newStats)
+      // console.log(newStats)
         const docId = `${newStats.userId} - 2023`
         setDoc(doc(db, 'standings2023', docId), newStats)
         .then(() => {
@@ -293,7 +293,7 @@ const logout = () => {
     function updatePredictionResults(docId, obj) {
         updateDoc(doc(db, 'predictions2023', docId), obj)
         .then(() => {
-            console.log("Predictions updated!")
+            console.log("Results updated!")
         })
         .catch(err => {
             console.log(err)

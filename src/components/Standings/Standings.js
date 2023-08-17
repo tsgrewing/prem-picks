@@ -43,20 +43,37 @@ function Dashboard() {
     const predictionArray = await getAllPredictions();
     const standingsArray = await getStandings();
     standingsArray.forEach(player => {
-      console.log(player)
+      // console.log(player)
         let updatedStats = player;
         let userPredictions = predictionArray.filter(obj => {
             return obj.uid === player.userId
         })
         userPredictions.forEach(pred => {
-            if ((!player.rounds || player.rounds.indexOf(pred.round) === -1) && pred.results) {
-                updatedStats.exactos = pred.results.exactos + updatedStats.exactos;
-                updatedStats.correct = pred.results.correct + updatedStats.correct;
-                updatedStats.incorrect = pred.results.incorrect + updatedStats.incorrect;
-                updatedStats.score = pred.results.roundScore + updatedStats.score;
-                updatedStats.rounds.push(pred.round);
-                // updateStandings(`${resData.uid} - 2022`, updatedStats)
-            }
+          // console.log(player.rounds)
+          let round = player.rounds.find(x => x.round == [pred.round])
+          console.log(round)
+          if (!round && pred.results) {
+            let roundName = pred.round;
+            let roundResults = pred.results
+            
+              updatedStats.exactos = pred.results.exactos + updatedStats.exactos;
+              updatedStats.correct = pred.results.correct + updatedStats.correct;
+              updatedStats.incorrect = pred.results.incorrect + updatedStats.incorrect;
+              updatedStats.score = pred.results.roundScore + updatedStats.score;
+              updatedStats.rounds.push(roundResults);
+              // console.log(`UpdatedStats ${updatedStats}`)
+              // updateStandings(`${resData.uid} - 2022`, updatedStats)
+          }
+
+          else if (round !== pred.results) {
+            // console.log (pred.results)
+            let oldResults = round;
+            updatedStats.exactos = pred.results.exactos + updatedStats.exactos - oldResults.exactos;
+            updatedStats.correct = pred.results.correct + updatedStats.correct - oldResults.correct;
+            updatedStats.incorrect = pred.results.incorrect + updatedStats.incorrect -oldResults.incorrect;
+            updatedStats.score = pred.results.roundScore + updatedStats.score - oldResults.roundScore;
+            updatedStats.rounds[pred.round] = pred.results;
+          }
 
         })
         // console.log (updatedStats)
