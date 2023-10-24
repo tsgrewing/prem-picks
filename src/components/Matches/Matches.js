@@ -153,7 +153,7 @@ function Matches() {
     // Clear inputs on submit
     document.querySelectorAll("input[type=number]").forEach(i => i.value = null)
 
-    if (predictions === []){
+    if (predictions == []){
       predictions = predictionsList;
     } 
     const predictionDoc = {
@@ -190,9 +190,9 @@ function Matches() {
     fetchUserName();
   }, [user, loading]);
 
-  // useEffect(() => {
-  //   getCurrentRound();
-  // }, []);
+  useEffect(() => {
+    getCurrentRound();
+  }, []);
 
   // Show the submit button if predictions are possible.
   const Modal = () => {
