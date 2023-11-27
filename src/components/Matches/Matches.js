@@ -289,9 +289,8 @@ function Matches() {
           <option value="37">Match Week 37</option>
           <option value="38">Match Week 38</option>
         </select>
-        <button onClick={() => printPreds()}>
-          Predictions?
-        </button>
+        <div className="p-3">
+        </div>
       </div>
       {matchList.map(match =>
         <div data-tip data-for={match.fixture.id + "tip"} key={match.fixture.id + "Row"} className='flex justify-content-center flex-wrap h-20'>

@@ -926,9 +926,10 @@ function Results() {
         <option value="38">Match Week 38</option>
       </select>
     </div>
+    <div className="p-3"></div>
       {isReady() &&
       <div className="px-2.5 w-full overflow-x-scroll">
-      <table className="text-sm w-full border-separate border border-slate-500 text-left text-gray-500 " id="resultTable">
+      <table className="text-sm w-full border-separate border bg-gray-50 border-slate-500 text-left text-gray-500 " id="resultTable">
         <thead className="text-xs text-gray-700 uppercase bg-gray-100">
           <tr className=" ">
             <th scope="col" className="py-3 px-6 bg-gray-50 border-collapse border border-slate-500">Match</th>
@@ -941,13 +942,13 @@ function Results() {
         <tbody>
           {matchList.map(match =>
             <tr className="">
-              <td className="border-collapse border border-slate-500">
+              <td className="border-collapse bg-gray-50 border border-slate-500">
               <img className="text-center object-scale-down inline px-2" alt="club crest" src={match.teams.home.logo} />
               {match.teams.home.name} - {match.teams.away.name}
               <img className="object-scale-down inline px-2" alt="club crest" src={match.teams.away.logo} />
 
               </td>
-              <td className="border-collapse border border-slate-500 text-center">{match.goals.home} - {match.goals.away}</td>
+              <td className="border-collapse bg-gray-50 border border-slate-500 text-center">{match.goals.home} - {match.goals.away}</td>
               {predictionArray.map(doc => {
                 const matchObj = doc.predictions.find(obj => {
                   return obj.id === match.fixture.id
@@ -958,7 +959,7 @@ function Results() {
                 )}
                 else {
                   return (
-                    <td className={"border-collapse border border-slate-500 text-black text-center bg-gray-400"}>PP</td>
+                    <td className={"border-collapse border border-slate-500 text-black text-center bg-gray-50"}>PP</td>
                   )
                 }
               } 
@@ -966,10 +967,10 @@ function Results() {
             </tr>
             )}
             <tr>
-              <td className="border-collapse border border-slate-500">Round Scores</td>
-              <td className="border-collapse border border-slate-500"></td>
+              <td className="border-collapse border border-slate-500 bg-gray-50">Round Scores</td>
+              <td className="border-collapse border border-slate-500 bg-gray-50"></td>
                   {predictionArray.map(player => 
-                    <td className="border-collapse border border-slate-500 text-center ">{player.results.roundScore}</td>)}
+                    <td className="border-collapse border border-slate-500 text-center bg-gray-50">{player.results.roundScore}</td>)}
             </tr>
         </tbody>
       </table>

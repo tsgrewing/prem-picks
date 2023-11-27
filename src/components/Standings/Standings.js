@@ -43,36 +43,44 @@ function Dashboard() {
     const predictionArray = await getAllPredictions();
     const standingsArray = await getStandings();
     standingsArray.forEach(player => {
-      // console.log(player)
+      // console.log(player.rounds)
         let updatedStats = player;
         let userPredictions = predictionArray.filter(obj => {
             return obj.uid === player.userId
         })
         userPredictions.forEach(pred => {
-          // console.log(player.rounds)
-          let round = player.rounds.findIndex(x => x.round == [pred.round])
-          console.log(round)
-          if (round == -1 && pred.results) {
+          // console.log(pred.round)
+          let roundNum = player.rounds.findIndex(x => x.round == [pred.round])
+          // console.log(roundNum)
+          // console.log(player.rounds[roundNum])
+          if (!pred.results) {
+            console.log(pred)
+          }
+          // console.log(pred.results)
+
+          if (roundNum == -1 && pred.results) {
+            // console.log(pred)
             let roundName = pred.round;
             let roundResults = pred.results
-            
+            // console.log(roundName)
               updatedStats.exactos = pred.results.exactos + updatedStats.exactos;
               updatedStats.correct = pred.results.correct + updatedStats.correct;
               updatedStats.incorrect = pred.results.incorrect + updatedStats.incorrect;
               updatedStats.score = pred.results.roundScore + updatedStats.score;
               updatedStats.rounds.push(roundResults);
-              // console.log(`UpdatedStats ${updatedStats}`)
+              // console.log(roundResults)
+              // console.log(`RoundResults =  ${roundResults}`)
               // updateStandings(`${resData.uid} - 2022`, updatedStats)
           }
-
-          else if (player.rounds[round] !== pred.results) {
-            console.log (pred.results)
-            let oldResults = player.rounds[round];
+          else if (player.rounds[roundNum] !== pred.results) {
+            // console.log (pred.results)
+            // console.log(player.rounds[round])
+            let oldResults = player.rounds[roundNum];
             updatedStats.exactos = pred.results.exactos + updatedStats.exactos - oldResults.exactos;
             updatedStats.correct = pred.results.correct + updatedStats.correct - oldResults.correct;
             updatedStats.incorrect = pred.results.incorrect + updatedStats.incorrect -oldResults.incorrect;
             updatedStats.score = pred.results.roundScore + updatedStats.score - oldResults.roundScore;
-            updatedStats.rounds[round] = pred.results;
+            updatedStats.rounds[roundNum] = pred.results;
             
           }
 
